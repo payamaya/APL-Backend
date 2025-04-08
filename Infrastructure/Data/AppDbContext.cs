@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
+    //The AppDbContext is located in the appsetting.json
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
