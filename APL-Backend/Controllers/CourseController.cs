@@ -23,7 +23,7 @@ namespace APL_Backend.Controllers
 
         [HttpGet("{id}")]
         //[Authorize(Roles = "Admin,Teacher,Student")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
             var result = await _courseService.GetCourseByIdAsync(id);
             return result == null ? NotFound() : Ok(result);
@@ -35,7 +35,7 @@ namespace APL_Backend.Controllers
 
         [HttpPut("{id}")]
         //[Authorize(Roles = "Admin,Teacher")]
-        public async Task<IActionResult> Update(int id, [FromBody] CourseDto dto)
+        public async Task<IActionResult> Update(Guid id, [FromBody] CourseDto dto)
         {
             if (id != dto.Id) return BadRequest("ID mismatch");
             return Ok(await _courseService.UpdateCourseAsync(dto));
@@ -43,6 +43,6 @@ namespace APL_Backend.Controllers
 
         [HttpDelete("{id}")]
         //[Authorize(Roles = "Admin,Teacher")]
-        public async Task<IActionResult> Delete(int id) => Ok(await _courseService.DeleteCourseAsync(id));
+        public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteCourseAsync(id));
     }
 }

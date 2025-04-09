@@ -31,7 +31,7 @@ namespace Infrastructure.Repositories
             return _mapper.Map<CourseDto>(course);
         }
 
-        public async Task<bool> DeleteCourseAsync(int id)
+        public async Task<bool> DeleteCourseAsync(Guid id)
         {
             var course = await _context.Courses.FindAsync(id);
             if (course == null) return false;
@@ -46,7 +46,7 @@ namespace Infrastructure.Repositories
             return _mapper.Map<IEnumerable<CourseDto>>(courses);
         }
 
-        public async Task<CourseDto?> GetCourseByIdAsync(int id)
+        public async Task<CourseDto?> GetCourseByIdAsync(Guid id)
         {
             var course = await _context.Courses.FindAsync(id);
             return course == null ? null : _mapper.Map<CourseDto>(course);
