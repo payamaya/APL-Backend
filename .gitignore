@@ -7,6 +7,10 @@
 appsettings.json
 appsettings.Development.json
 
+# Environment variables
+.env
+.env.*
+
 # User-specific files
 *.rsuser
 *.suo
