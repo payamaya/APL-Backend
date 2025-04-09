@@ -6,6 +6,18 @@ using Application.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add CORS policy FIRST (before other services)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Your Vite port
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 // Register PostgreSQL DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
