@@ -1,13 +1,10 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using Infrastructure.Repositories;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    [Route("api/course/[controller]")]
+    [Route("api/course/{courseId}/[controller]")]
     [ApiController]
     public class ModuleController : ControllerBase
     {
@@ -19,31 +16,45 @@ namespace APL_Backend.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Admin,Teacher,Student")]
-        public async Task<IActionResult> GetAll() => Ok(await _moduleService.GetAllModulesAsync());
+        public async Task<IActionResult> GetAll(Guid courseId) =>
+            Ok(await _moduleService.GetAllModulesAsync(courseId));
 
-        [HttpGet("{id}")]
-        //[Authorize(Roles = "Admin,Teacher,Student")]
-        public async Task<IActionResult> Get(Guid id)
+        [HttpGet("{moduleId}")]
+        public async Task<IActionResult> Get(Guid courseId, Guid moduleId)
         {
-            var result = await _moduleService.GetModuleByIdAsync(id);
+            var result = await _moduleService.GetModuleByIdAsync(courseId, moduleId);
             return result == null ? NotFound() : Ok(result);
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin,Teacher")]
-        public async Task<IActionResult> Create([FromBody] ModuleDto dto) => Ok(await _moduleService.CreateModuleAsync(dto));
-
-        [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin,Teacher")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] ModuleDto dto)
+        public async Task<IActionResult> Create(Guid courseId, [FromBody] ModuleDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID mismatch");
+            try
+            {
+                dto.CourseId = courseId; // Ensure association
+                var createdModule = await _moduleService.CreateModuleAsync(dto);
+                return CreatedAtAction(
+                    nameof(Get),
+                    new { courseId, moduleId = createdModule.Id },
+                    createdModule
+                );
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{moduleId}")]
+        public async Task<IActionResult> Update(Guid courseId, Guid moduleId, [FromBody] ModuleDto dto)
+        {
+            if (moduleId != dto.Id) return BadRequest("ID mismatch");
+            dto.CourseId = courseId; // Ensure course association remains
             return Ok(await _moduleService.UpdateModuleAsync(dto));
         }
 
-        [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin,Teacher")]
-        public async Task<IActionResult> Delete(Guid id) => Ok(await _moduleService.DeleteModuleAsync(id));
+        [HttpDelete("{moduleId}")]
+        public async Task<IActionResult> Delete(Guid courseId, Guid moduleId) =>
+            Ok(await _moduleService.DeleteModuleAsync(moduleId));
     }
 }

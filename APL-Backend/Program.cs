@@ -26,6 +26,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register services
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IModuleService, ModuleService>();
 
 // Register AutoMapper and scan the current domain for profiles
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -42,7 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("ReactFrontend");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
