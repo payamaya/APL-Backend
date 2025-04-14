@@ -11,6 +11,9 @@ namespace Application.Mapping
         {
             CreateMap<CourseDto, Course>();
             CreateMap<Course, CourseDto>();
+
+            CreateMap<ModuleDto, Module>();
+            CreateMap<Module, ModuleDto>();
         }
     }
 }
