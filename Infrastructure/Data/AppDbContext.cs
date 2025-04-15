@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Activity = Domain.Entities.Activity;
 using Module = Domain.Entities.Module;
 
 namespace Infrastructure.Data
@@ -19,6 +20,7 @@ namespace Infrastructure.Data
         public DbSet<Course> Courses => Set<Course>();
         public DbSet<Module> Modules => Set<Module>();
 
-      
+        public DbSet<Activity> Activities => Set<Activity>();
+
     }
 }
