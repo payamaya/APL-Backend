@@ -23,7 +23,7 @@ namespace Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ActivityDto>> GetAllActivityAsync(Guid moduleId)
+        public async Task<IEnumerable<ActivityDto>> GetAllActivitiesAsync(Guid moduleId)
         {
             var activities = await _context.Activities
                 .Where(a => a.ModuleId == moduleId)
