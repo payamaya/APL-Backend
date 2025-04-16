@@ -35,7 +35,7 @@ namespace APL_Backend.Controllers
                 var createdActivity = await _activityService.CreateActivityAsync(dto);
                 return CreatedAtAction(
                     nameof(Get),
-                    new {moduleId, activityId = createdActivity.Id },
+                    new { moduleId, activityId = createdActivity.Id },
                     createdActivity
                 );
             }
