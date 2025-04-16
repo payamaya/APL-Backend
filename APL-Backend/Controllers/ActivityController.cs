@@ -16,18 +16,18 @@ namespace APL_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(Guid moduleId) =>
+        public async Task<IActionResult> GetAll(Guid courseId, Guid moduleId) =>
             Ok(await _activityService.GetAllActivitiesAsync(moduleId));
 
         [HttpGet("{activityId}")]
-        public async Task<IActionResult> Get(Guid moduleId, Guid activityId)
+        public async Task<IActionResult> Get(Guid courseId, Guid moduleId, Guid activityId)
         {
             var result = await _activityService.GetActivityByIdAsync(moduleId, activityId);
             return result == null ? NotFound() : Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Guid moduleId, [FromBody] ActivityDto dto)
+        public async Task<IActionResult> Create(Guid courseId, Guid moduleId, [FromBody] ActivityDto dto)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace APL_Backend.Controllers
                 var createdActivity = await _activityService.CreateActivityAsync(dto);
                 return CreatedAtAction(
                     nameof(Get),
-                    new { moduleId, activityId = createdActivity.Id },
+                    new {courseId, moduleId, activityId = createdActivity.Id },
                     createdActivity
                 );
             }
@@ -46,7 +46,7 @@ namespace APL_Backend.Controllers
         }
 
         [HttpPut("{activityId}")]
-        public async Task<IActionResult> Update(Guid moduleId, Guid activityId, [FromBody] ActivityDto dto)
+        public async Task<IActionResult> Update(Guid courseId, Guid moduleId, Guid activityId, [FromBody] ActivityDto dto)
         {
             if (activityId != dto.Id) return BadRequest("ID mismatch");
             dto.ModuleId = moduleId; // Ensure course association remains
@@ -54,7 +54,7 @@ namespace APL_Backend.Controllers
         }
 
         [HttpDelete("{activityId}")]
-        public async Task<IActionResult> Delete(Guid moduleId, Guid activityId) =>
+        public async Task<IActionResult> Delete(Guid courseId, Guid moduleId, Guid activityId) =>
             Ok(await _activityService.DeleteActivityAsync(activityId));
     }
 }
