@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 using Infrastructure.Repositories;
 using Application.Mapping;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,9 +35,21 @@ builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add other services
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "APL_Backend", Version = "v1" });
+    c.UseInlineDefinitionsForEnums(); // Makes enum values show up clearly
+});
 
 var app = builder.Build();
 

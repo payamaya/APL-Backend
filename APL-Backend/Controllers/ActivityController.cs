@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
@@ -29,6 +30,8 @@ namespace APL_Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Guid moduleId, [FromBody] ActivityDto dto)
         {
+            if (!Enum.IsDefined(typeof(ActivityType), dto.ActivityType))
+                return BadRequest("Invalid activity type.");
             try
             {
                 dto.ModuleId = moduleId; // Ensure association
@@ -49,6 +52,10 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Update(Guid moduleId, Guid activityId, [FromBody] ActivityDto dto)
         {
             if (activityId != dto.Id) return BadRequest("ID mismatch");
+
+            if (!Enum.IsDefined(typeof(ActivityType), dto.ActivityType))
+                return BadRequest("Invalid activity type.");
+
             dto.ModuleId = moduleId; // Ensure course association remains
             return Ok(await _activityService.UpdateActivityAsync(dto));
         }
