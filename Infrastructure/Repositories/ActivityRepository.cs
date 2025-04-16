@@ -23,10 +23,10 @@ namespace Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ActivityDto>> GetAllModulesAsync(Guid moduleId)
+        public async Task<IEnumerable<ActivityDto>> GetAllActivitiesAsync(Guid moduleId)
         {
-            var activities = await _context.Modules
-                .Where(m => m.ModuleId == moduleId)
+            var activities = await _context.Activities
+                .Where(a => a.ModuleId == moduleId)
                 .ToListAsync();
             return _mapper.Map<IEnumerable<ActivityDto>>(activities);
         }
@@ -80,13 +80,6 @@ namespace Infrastructure.Repositories
             _context.Activities.Remove(activity);
             await _context.SaveChangesAsync();
             return true;
-        }
-        public async Task<IEnumerable<ActivityDto>> GetAllActivityAsync(Guid moduleId)
-        {
-            var activities = await _context.Activities
-                .Where(a => a.ModuleId == moduleId)
-                .ToListAsync();
-            return _mapper.Map<IEnumerable<ActivityDto>>(activities);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Application.Interfaces
 {
     public interface IActivityService
     {
-        Task<IEnumerable<ActivityDto>> GetAllActivityAsync(Guid moduleId);
+        Task<IEnumerable<ActivityDto>> GetAllActivitiesAsync(Guid moduleId);
         Task<ActivityDto?> GetActivityByIdAsync(Guid moduleId, Guid activityId);
         Task<ActivityDto> CreateActivityAsync(ActivityDto dto);
         Task<ActivityDto> UpdateActivityAsync(ActivityDto dto);

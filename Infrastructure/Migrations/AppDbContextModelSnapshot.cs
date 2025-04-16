@@ -22,6 +22,37 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entities.Activity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ActivityType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ModuleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("Activities");
+                });
+
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
                     b.Property<Guid>("Id")
@@ -73,6 +104,17 @@ namespace Infrastructure.Migrations
                     b.ToTable("Modules");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Activity", b =>
+                {
+                    b.HasOne("Domain.Entities.Module", "Module")
+                        .WithMany("Activities")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Module");
+                });
+
             modelBuilder.Entity("Domain.Entities.Module", b =>
                 {
                     b.HasOne("Domain.Entities.Course", "Course")
@@ -87,6 +129,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Course", b =>
                 {
                     b.Navigation("Modules");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Module", b =>
+                {
+                    b.Navigation("Activities");
                 });
 #pragma warning restore 612, 618
         }
