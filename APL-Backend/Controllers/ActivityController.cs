@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    [Route("api/course/{courseId}/{moduleId}/[controller]")]
+    [Route("api/course/{courseId}/module/{moduleId}/[controller]")]
     [ApiController]
     public class ActivityController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace APL_Backend.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAll(Guid moduleId) =>
-            Ok(await _activityService.GetAllActivityAsync(moduleId));
+            Ok(await _activityService.GetAllActivitiesAsync(moduleId));
 
         [HttpGet("{activityId}")]
         public async Task<IActionResult> Get(Guid moduleId, Guid activityId)
