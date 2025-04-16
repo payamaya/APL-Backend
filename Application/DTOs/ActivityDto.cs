@@ -15,8 +15,6 @@ namespace Application.DTOs
         public string Title { get; set; } = string.Empty; // ⛔ Remove `internal set`
         public string Description { get; set; } = string.Empty; // ⛔ Remove `internal set`
         public ActivityType ActivityType { get; set; } // ⛔ Remove `internal set`
-
-        //public Guid CourseId { get; set; }// Required foreign key
         public Guid ModuleId { get; set; } // Required foreign key
     }
 
