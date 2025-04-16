@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    [Route("api/course/{courseId}/module/{moduleId}/[controller]")]
+    [Route("api/course/module/{moduleId}/[controller]")]
     [ApiController]
     public class ActivityController : ControllerBase
     {
