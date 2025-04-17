@@ -16,5 +16,9 @@ namespace Domain.Entities
         public ActivityType ActivityType { get; set; }
         public Guid ModuleId { get; set; }
         public Module Module { get; set; }
+
+        public DateTime? DueDate { get; set; } // Nullable to allow for no due date
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
