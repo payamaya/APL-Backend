@@ -370,4 +370,3 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Infrastructure/Migrations
-/APL-Backend/appsettings.json

@@ -1,5 +1,7 @@
-﻿using Application.DTOs;
+﻿using System.Xml.Linq;
+using Application.DTOs;
 using AutoMapper;
+using DocumentFormat.OpenXml.Presentation;
 using Domain.Entities;
 
 
@@ -17,6 +19,10 @@ namespace Application.Mapping
 
             CreateMap<ActivityDto, Activity>();
             CreateMap<Activity, ActivityDto>();
+            CreateMap<Comment, CommentDto>();
+            CreateMap<CommentDto, Comment>();
+
+
         }
     }
 }
