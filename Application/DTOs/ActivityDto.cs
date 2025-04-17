@@ -17,9 +17,9 @@ namespace Application.DTOs
         public ActivityType ActivityType { get; set; } // ⛔ Remove `internal set`
         public Guid ModuleId { get; set; } // Required foreign key
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTimeOffset? DueDate { get; set; }
+        public DateTime? DueDate { get; set; }
     }
 
 }
