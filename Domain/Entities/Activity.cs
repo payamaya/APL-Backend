@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Domain.Enums;
+using TimeZoneConverter;
 
 namespace Domain.Entities
 {
@@ -16,5 +19,14 @@ namespace Domain.Entities
         public ActivityType ActivityType { get; set; }
         public Guid ModuleId { get; set; }
         public Module Module { get; set; }
+
+        public DateTime? DueDate { get; set; } // Nullable to allow for no due date
+
+        public DateTime? CreatedAt { get; set; } =
+        TimeZoneInfo.ConvertTimeFromUtc(
+        DateTime.UtcNow,
+        TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")
+    );
+
     }
 }

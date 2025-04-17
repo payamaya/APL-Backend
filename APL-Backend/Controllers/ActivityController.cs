@@ -32,6 +32,12 @@ namespace APL_Backend.Controllers
         {
             if (!Enum.IsDefined(typeof(ActivityType), dto.ActivityType))
                 return BadRequest("Invalid activity type.");
+
+            if (dto.ActivityType == ActivityType.Assignment && dto.DueDate == null)   
+            {
+                throw new Exception("Assignments must have a due date.");
+            }
+
             try
             {
                 dto.ModuleId = moduleId; // Ensure association
