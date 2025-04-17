@@ -31,7 +31,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ActivityType")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
