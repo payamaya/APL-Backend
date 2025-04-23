@@ -17,10 +17,10 @@ namespace Application.DTOs
         public ActivityType ActivityType { get; set; } // ⛔ Remove `internal set`
         public Guid ModuleId { get; set; } // Required foreign key
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime StartDate { get; set; }
 
         // Optional depending on type
-        public DateTime? DueDate { get; set; } // For assignments
+        public DateTime? EndDate { get; set; } // For assignments
         public List<string>? Questions { get; set; } // For quizzes or polls
         public List<string>? Options { get; set; } // For polls
         public List<CommentDto>? Comments { get; set; } // For discussions

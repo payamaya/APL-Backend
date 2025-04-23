@@ -20,13 +20,9 @@ namespace Domain.Entities
         public Guid ModuleId { get; set; }
         public Module Module { get; set; }
 
-        public DateTime? DueDate { get; set; } // Nullable to allow for no due date
+        public DateTime? EndDate { get; set; } // Nullable to allow for no due date
 
-        public DateTime? CreatedAt { get; set; } =
-        TimeZoneInfo.ConvertTimeFromUtc(
-        DateTime.UtcNow,
-        TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")
-    );
+        public DateTime? StartDate { get; set; } = DateTime.UtcNow;
 
     }
 }

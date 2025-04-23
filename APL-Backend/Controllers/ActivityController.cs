@@ -33,9 +33,21 @@ namespace APL_Backend.Controllers
             if (!Enum.IsDefined(typeof(ActivityType), dto.ActivityType))
                 return BadRequest("Invalid activity type.");
 
-            if (dto.ActivityType == ActivityType.Assignment && dto.DueDate == null)   
+            if (dto.ActivityType == ActivityType.Assignment && dto.EndDate == null)   
             {
                 throw new Exception("Assignments must have a due date.");
+            }
+
+            // Validate the StartDate
+            if (dto.StartDate < DateTime.UtcNow)
+            {
+                return BadRequest("Start date cannot be in the past.");
+            }
+
+            // Validate that EndDate (if provided) is after StartDate
+            if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
+            {
+                return BadRequest("End date must be after start date.");
             }
 
             try
@@ -61,6 +73,17 @@ namespace APL_Backend.Controllers
 
             if (!Enum.IsDefined(typeof(ActivityType), dto.ActivityType))
                 return BadRequest("Invalid activity type.");
+            // Validate the StartDate
+            if (dto.StartDate < DateTime.UtcNow)
+            {
+                return BadRequest("Start date cannot be in the past.");
+            }
+
+            // Validate that EndDate (if provided) is after StartDate
+            if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
+            {
+                return BadRequest("End date must be after start date.");
+            }
 
             dto.ModuleId = moduleId; // Ensure course association remains
             return Ok(await _activityService.UpdateActivityAsync(dto));
