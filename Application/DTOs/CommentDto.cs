@@ -12,7 +12,7 @@ namespace Application.DTOs
         public string Content { get; set; } = string.Empty;
         public Guid ActivityId { get; set; } // Required foreign key
         public Guid UserId { get; set; } // Required foreign key
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; } // Optional for edits
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; } // Optional for edits
     }
 }

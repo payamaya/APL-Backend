@@ -12,11 +12,7 @@ namespace Domain.Entities
         public string Content { get; set; } = string.Empty;
         public Guid ActivityId { get; set; } // Required foreign key
         public Guid UserId { get; set; } // Required foreign key
-        public DateTime? CreatedAt { get; set; } =
-        TimeZoneInfo.ConvertTimeFromUtc(
-        DateTime.UtcNow,
-        TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")
-        );
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; } // Optional for edits
         // Navigation properties
         public virtual Activity Activity { get; set; } = null!;

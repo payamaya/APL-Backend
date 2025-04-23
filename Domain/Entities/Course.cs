@@ -15,5 +15,9 @@ namespace Domain.Entities
         public string Description { get; set; } = string.Empty;
         public ICollection<Module> Modules { get; set; } = new List<Module>();
 
+        public DateTime? EndDate { get; set; } // Nullable to allow for no due date
+
+        public DateTime? StartDate { get; set; } = DateTime.UtcNow;
+
     }
 }
