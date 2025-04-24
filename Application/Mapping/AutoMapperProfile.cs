@@ -19,8 +19,6 @@ namespace Application.Mapping
 
             CreateMap<ActivityDto, Activity>();
             CreateMap<Activity, ActivityDto>();
-            CreateMap<Domain.Entities.Comment, CommentDto>();
-            CreateMap<CommentDto, Domain.Entities.Comment>();
         }
     }
 }

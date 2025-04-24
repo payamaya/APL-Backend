@@ -15,6 +15,8 @@ namespace Application.DTOs
         public string Description { get; set; } = string.Empty; // ⛔ Remove `internal set`
         public Guid CourseId { get; set; } // Required foreign key
 
+        public DateTime? createdAt { get; set; }
+
 
     }
 
