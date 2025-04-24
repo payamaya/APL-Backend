@@ -1,9 +1,10 @@
-using Infrastructure.Data;
+﻿using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 using Infrastructure.Repositories;
 using Application.Mapping;
 using System.Text.Json.Serialization;
+using Infrastructure.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
+builder.Services.AddScoped<IFileStorage, LocalFileStorage>();   // Register your file‐storage provider
 
 
 // Register AutoMapper and scan the current domain for profiles

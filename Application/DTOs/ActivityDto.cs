@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Domain.Enums;
+using Microsoft.AspNetCore.Http;    // For IFormFile
 
 namespace Application.DTOs
 {
@@ -14,6 +12,8 @@ namespace Application.DTOs
 
         public string Title { get; set; } = string.Empty; // ⛔ Remove `internal set`
         public string Description { get; set; } = string.Empty; // ⛔ Remove `internal set`
+
+        public string Content { get; set; } = string.Empty;
         public ActivityType ActivityType { get; set; } // ⛔ Remove `internal set`
         public Guid ModuleId { get; set; } // Required foreign key
 
@@ -24,6 +24,8 @@ namespace Application.DTOs
         public List<string>? Questions { get; set; } // For quizzes or polls
         public List<string>? Options { get; set; } // For polls
         public List<CommentDto>? Comments { get; set; } // For discussions
+        public List<IFormFile>? Files { get; set; } // For incoming uploads
+        public List<string>? AttachmentUrls { get; set; } // For outgoing URLs
     }
 
 }
