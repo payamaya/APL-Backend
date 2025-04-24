@@ -16,13 +16,13 @@ namespace Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
         public ActivityType ActivityType { get; set; }
         public Guid ModuleId { get; set; }
         public Module Module { get; set; }
-
-        public DateTime? EndDate { get; set; } // Nullable to allow for no due date
-
+        public DateTime? EndDate { get; set; } = DateTime.UtcNow; // Nullable if you want to allow for no due date
         public DateTime? StartDate { get; set; } = DateTime.UtcNow;
+        public List<string> AttachmentUrls { get; set; } = new(); // New property to hold the list of saved file URLs
 
     }
 }

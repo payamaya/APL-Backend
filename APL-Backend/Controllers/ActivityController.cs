@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    [Route("api/course/module/{moduleId}/[controller]")]
     [ApiController]
+    [Route("api/course/module/{moduleId}/[controller]")]
+    [Consumes("application/json", "multipart/form-data")] // Enable file uploads
     public class ActivityController : ControllerBase
     {
         private readonly IActivityService _activityService;
@@ -28,7 +29,7 @@ namespace APL_Backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Guid moduleId, [FromBody] ActivityDto dto)
+        public async Task<IActionResult> Create(Guid moduleId, [FromForm] ActivityDto dto) // Bind form data + files
         {
             if (!Enum.IsDefined(typeof(ActivityType), dto.ActivityType))
                 return BadRequest("Invalid activity type.");
@@ -52,12 +53,12 @@ namespace APL_Backend.Controllers
 
             try
             {
-                dto.ModuleId = moduleId; // Ensure association
-                var createdActivity = await _activityService.CreateActivityAsync(dto);
+                dto.ModuleId = moduleId;
+                var created = await _activityService.CreateActivityAsync(dto);      // Ensure association and handles dto.Files too
                 return CreatedAtAction(
                     nameof(Get),
-                    new { moduleId, activityId = createdActivity.Id },
-                    createdActivity
+                    new { moduleId, activityId = created.Id },
+                    created
                 );
             }
             catch (InvalidOperationException ex)
@@ -67,7 +68,7 @@ namespace APL_Backend.Controllers
         }
 
         [HttpPut("{activityId}")]
-        public async Task<IActionResult> Update(Guid moduleId, Guid activityId, [FromBody] ActivityDto dto)
+        public async Task<IActionResult> Update(Guid moduleId, Guid activityId, [FromForm] ActivityDto dto)
         {
             if (activityId != dto.Id) return BadRequest("ID mismatch");
 
@@ -86,7 +87,8 @@ namespace APL_Backend.Controllers
             }
 
             dto.ModuleId = moduleId; // Ensure course association remains
-            return Ok(await _activityService.UpdateActivityAsync(dto));
+            var updated = await _activityService.UpdateActivityAsync(dto);
+            return Ok(updated);
         }
 
         [HttpDelete("{activityId}")]
