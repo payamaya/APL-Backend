@@ -22,5 +22,18 @@ namespace Infrastructure.Data
 
         public DbSet<Activity> Activities => Set<Activity>();
 
+        public DbSet<User> Users => Set<User>();
+
+        //BUG: Need to be fixed!
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Many-to-Many
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Courses)
+                .WithMany(c => c.Users);
+        }
+
     }
 }

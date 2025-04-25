@@ -21,6 +21,12 @@ namespace Application.Mapping
             CreateMap<Activity, ActivityDto>();
             CreateMap<Domain.Entities.Comment, CommentDto>();
             CreateMap<CommentDto, Domain.Entities.Comment>();
+
+            CreateMap<CreateUserDto, User>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserName));
+            CreateMap<User, CreateUserDto>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Name));
+
         }
     }
 }

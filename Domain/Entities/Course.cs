@@ -19,5 +19,9 @@ namespace Domain.Entities
 
         public DateTime? StartDate { get; set; } = DateTime.UtcNow;
 
+        //Navigation
+        public ICollection<User> Users { get; set; } = new List<User>();
+
+
     }
 }
