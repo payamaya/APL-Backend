@@ -23,8 +23,9 @@ namespace Application.Mapping
             CreateMap<CommentDto, Domain.Entities.Comment>();
 
             CreateMap<CreateUserDto, User>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserName));
-            CreateMap<User, CreateUserDto>()
+                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.UserName));
+
+            CreateMap<User, UserDto>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Name));
 
         }

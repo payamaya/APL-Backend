@@ -9,9 +9,9 @@ namespace Application.Interfaces
 {
     public interface IUserService
     {
-        Task<CreateUserDto> CreateUserAsync(CreateUserDto userDto);
-        Task AssignUserToCourseAsync (AssignUserToCourseDto userDto);
-        
+        Task<UserDto> CreateUserAsync(CreateUserDto dto);
+        Task AssignUserToCourseAsync(AssignUserToCourseDto dto);
+        Task<List<UserDto>> GetAllUsersAsync();
 
     }
 }

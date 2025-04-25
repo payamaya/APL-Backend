@@ -1,7 +1,7 @@
-﻿using Application.DTOs;
+﻿/*using Application.DTOs;
 using Application.Interfaces;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Entities.Enums;
 
 namespace Infrastructure.Repositories
 {
@@ -16,41 +16,29 @@ namespace Infrastructure.Repositories
             _mapper = mapper;
         }
 
-        public async Task<CreateUserDto> CreateUserAsync(CreateUserDto dto)
-        {
-            var user = _mapper.Map<User>(dto);
-
-            // Optional: hash password here or do it via middleware/service
-            // user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return _mapper.Map<UserDto>(user);
-        }
-
         public async Task AssignUserToCourseAsync(AssignUserToCourseDto dto)
         {
             var user = await _context.Users
                 .Include(u => u.Courses)
                 .FirstOrDefaultAsync(u => u.Id == dto.UserId);
+
+            if (user == null)
+                throw new Exception("User not found");
+
+            if (user.Role != Role.Teacher && user.Role != Role.Student)
+                throw new Exception("Only Teachers or Students can be assigned to courses");
+
             var course = await _context.Courses.FindAsync(dto.CourseId);
+            if (course == null)
+                throw new Exception("Course not found");
 
-            if (user == null || course == null)
-                throw new Exception("User or Course not found");
-
-            user.Courses.Add(course);
-            await _context.SaveChangesAsync();
-        }
-
-        Task<CreateUserDto> IUserService.CreateUserAsync(CreateUserDto userDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task CreateAsync(CreateUserDto dto)
-        {
-            throw new NotImplementedException();
+            // Prevent duplicates
+            if (!user.Courses.Any(c => c.Id == dto.CourseId))
+            {
+                user.Courses.Add(course);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
+*/

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Entities.Enums;
+
 
 namespace Domain.Entities
 {
@@ -13,10 +9,14 @@ namespace Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string ?Password { get; set; } = string.Empty; // Optional
-        public Enums.Role Role { get; set; }
+        //TODO change Role to string
+        public Role Role { get; set; }
 
         //Navigation
+        public Guid CourseId { get; set; }
+     /*   public Course Course { get; set; }*/
         public ICollection<Course> Courses { get; set; } = new List<Course>();
+
 
 
 

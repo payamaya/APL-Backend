@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,32 +10,31 @@ namespace APL_Backend.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
-        public AdminController(UserService userService)
+        public AdminController(IUserService userService)
         {
             _userService = userService;
         }
 
-        public UserService Get_userService()
-        {
-            return _userService;
-        }
-
         [HttpPost("create-user")]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto, UserService _userService)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
         {
-            var user = await _userService.CreateAsync(dto);
+            var user = await _userService.CreateUserAsync(dto);
             return Ok(user);
         }
 
         [HttpPost("assign-course")]
-
         public async Task<IActionResult> AssignToCourse([FromBody] AssignUserToCourseDto dto)
         {
-            var _userService.AssignUserToCourseAsync(dto);
+            await _userService.AssignUserToCourseAsync(dto);
             return Ok("Assigned Successfully!");
         }
-
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
+        }
     }
 }

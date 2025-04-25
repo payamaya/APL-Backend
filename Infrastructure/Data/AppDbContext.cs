@@ -24,15 +24,19 @@ namespace Infrastructure.Data
 
         public DbSet<User> Users => Set<User>();
 
+
+
         //BUG: Need to be fixed!
+        // Optionally, implement OnModelCreating if you need more configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Many-to-Many
+            // You can enable the many-to-many relationship if needed
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Courses)
-                .WithMany(c => c.Users);
+                .WithMany(c => c.Users)
+                .UsingEntity(j => j.ToTable("UserCourses")); // Optional join table name
         }
 
     }
