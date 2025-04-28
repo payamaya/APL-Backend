@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Enums;
 
 namespace Domain.Entities
 {
@@ -13,7 +14,7 @@ namespace Domain.Entities
         public string Name { get; set; } = string.Empty;
 
         public string Title { get; set; } = string.Empty;
-        public string TeacherType { get; set; } = string.Empty;
+        public TeacherType TeacherType { get; set; }
         public string Email { get; set; } = string.Empty;
 
         [Phone]

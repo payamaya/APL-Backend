@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.DTOs
 {
@@ -14,7 +15,7 @@ namespace Application.DTOs
         public string Name { get; set; } = string.Empty;
 
         public string Title { get; set; } = string.Empty; // ⛔ Remove `internal set`
-        public string TeacherType { get; set; } = string.Empty;
+        public TeacherType TeacherType { get; set; }
 
         //[EmailAddress]
         //[MaxLength(20)]

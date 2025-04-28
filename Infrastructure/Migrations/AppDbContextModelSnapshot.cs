@@ -145,9 +145,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("TeacherType")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("TeacherType")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Telephone")
                         .IsRequired()
