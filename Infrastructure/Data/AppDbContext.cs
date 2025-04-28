@@ -34,6 +34,16 @@ namespace Infrastructure.Data
                 .HasMany(u => u.Courses)
                 .WithMany(c => c.Users)
                 .UsingEntity(j => j.ToTable("UserCourses")); // Optional join table name
+
+            modelBuilder
+                .Entity<Teacher>()
+                .Property(t => t.TeacherType)
+                .HasConversion<string>();
+
+            modelBuilder
+                .Entity<Activity>()
+                .Property(a => a.ActivityType)
+                .HasConversion<string>();
         }
 
     }

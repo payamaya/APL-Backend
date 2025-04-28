@@ -43,8 +43,9 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("ActivityType")
-                        .HasColumnType("integer");
+                    b.Property<string>("ActivityType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -145,8 +146,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("TeacherType")
-                        .HasColumnType("integer");
+                    b.Property<string>("TeacherType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Telephone")
                         .IsRequired()
