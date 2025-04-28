@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +11,15 @@ namespace Application.DTOs
     {
         public Guid Id { get; set; }
         public string UserName { get; set; } = null!;
+        public string Password { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Role { get; set; } = null!;
 
+        public string Description { get; set; } = string.Empty;
+
+        [Phone]
+        [MaxLength(20)]
+        public string Telephone { get; set; }
         public Guid? CourseId { get; set; } // Required foreign key
         
 }

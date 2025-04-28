@@ -30,11 +30,13 @@ namespace APL_Backend.Controllers
             await _userService.AssignUserToCourseAsync(dto);
             return Ok("Assigned Successfully!");
         }
-        [HttpGet("users")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            var users = await _userService.GetAllUsersAsync();
-            return Ok(users);
-        }
+
+        //[HttpGet("teachers")]
+        //public async Task<IActionResult> GetAllTeachers()
+        //{
+        //    var users = await _userService.GetAllTeachersAsync();
+        //    return Ok(users);
+        //}
+
     }
 }

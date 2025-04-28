@@ -1,14 +1,8 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Activity = Domain.Entities.Activity;
 using Module = Domain.Entities.Module;
+using Teacher = Domain.Entities.Teacher;
 
 namespace Infrastructure.Data
 {
@@ -23,6 +17,9 @@ namespace Infrastructure.Data
         public DbSet<Activity> Activities => Set<Activity>();
 
         public DbSet<User> Users => Set<User>();
+        public DbSet<Teacher> Teachers => Set<Teacher>();
+
+
 
 
 

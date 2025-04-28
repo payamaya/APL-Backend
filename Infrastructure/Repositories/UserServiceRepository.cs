@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Enums;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,5 +46,15 @@ namespace Infrastructure.Repositories
             user.Courses.Add(course);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<UserDto>> GetAllTeachersAsync()
+        {
+            var teachers = await _context.Users
+                .Where(u => u.Role == Role.Teacher)
+                .ToListAsync();
+
+            return _mapper.Map<List<UserDto>>(teachers);
+        }
+
     }
 }

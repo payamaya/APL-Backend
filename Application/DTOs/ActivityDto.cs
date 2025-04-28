@@ -23,7 +23,6 @@ namespace Application.DTOs
         public DateTime? EndDate { get; set; } // For assignments
         public List<string>? Questions { get; set; } // For quizzes or polls
         public List<string>? Options { get; set; } // For polls
-        public List<CommentDto>? Comments { get; set; } // For discussions
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using Domain.Entities.Enums;
 
 
 namespace Domain.Entities
@@ -7,8 +8,14 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+        [Phone]
+        [MaxLength(20)]
+        public string Telephone { get; set; }
+        public string? UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string ?Password { get; set; } = string.Empty; // Optional
+        public string? Password { get; set; } = string.Empty; // Optional
         //TODO change Role to string
         public Role Role { get; set; }
 
