@@ -1,14 +1,8 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Activity = Domain.Entities.Activity;
 using Module = Domain.Entities.Module;
+using Teacher = Domain.Entities.Teacher;
 
 namespace Infrastructure.Data
 {
@@ -21,6 +15,36 @@ namespace Infrastructure.Data
         public DbSet<Module> Modules => Set<Module>();
 
         public DbSet<Activity> Activities => Set<Activity>();
+
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Teacher> Teachers => Set<Teacher>();
+
+
+
+
+
+        //BUG: Need to be fixed!
+        // Optionally, implement OnModelCreating if you need more configurations
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // You can enable the many-to-many relationship if needed
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Courses)
+                .WithMany(c => c.Users)
+                .UsingEntity(j => j.ToTable("UserCourses")); // Optional join table name
+
+            modelBuilder
+                .Entity<Teacher>()
+                .Property(t => t.TeacherType)
+                .HasConversion<string>();
+
+            modelBuilder
+                .Entity<Activity>()
+                .Property(a => a.ActivityType)
+                .HasConversion<string>();
+        }
 
     }
 }

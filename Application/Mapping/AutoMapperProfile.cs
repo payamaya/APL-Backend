@@ -14,13 +14,18 @@ namespace Application.Mapping
             CreateMap<CourseDto, Course>();
             CreateMap<Course, CourseDto>();
 
+            CreateMap<TeacherDto, Teacher>();
+            CreateMap<Teacher, TeacherDto>();
+
             CreateMap<ModuleDto, Module>();
             CreateMap<Module, ModuleDto>();
 
             CreateMap<ActivityDto, Activity>();
             CreateMap<Activity, ActivityDto>();
-            CreateMap<Domain.Entities.Comment, CommentDto>();
-            CreateMap<CommentDto, Domain.Entities.Comment>();
+
+            CreateMap<CreateUserDto, User>();
+            CreateMap<User, UserDto>();
+
         }
     }
 }
