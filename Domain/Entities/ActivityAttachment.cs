@@ -14,5 +14,6 @@
 
         // Actual file bytes → maps automatically to Postgres bytea
         public byte[] Data { get; set; } = Array.Empty<byte>();
+
     }
 }
