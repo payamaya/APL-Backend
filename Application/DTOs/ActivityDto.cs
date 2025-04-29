@@ -67,5 +67,6 @@ namespace Application.DTOs
 
         // **NEW** outgoing URLs
         public List<string>? AttachmentUrls { get; set; }
+>>>>>>>>> Temporary merge branch 2
     }
 }
