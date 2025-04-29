@@ -54,13 +54,12 @@ namespace Application.DTOs
         public Guid ModuleId { get; set; }
 
         public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
 
-        public List<string>? Questions { get; set; }
-        public List<string>? Options { get; set; }
-        public List<CommentDto>? Comments { get; set; }
-
-        // **NEW**: the list your service populates
+        // Optional depending on type
+        public DateTime? EndDate { get; set; } // For assignments
+        public List<string>? Questions { get; set; } // For quizzes or polls
+        public List<string>? Options { get; set; } // For polls
+                                                   // **NEW**: the list your service populates
         public List<AttachmentDto>? Attachments { get; set; }
 
         // **NEW** incoming uploads
@@ -69,4 +68,5 @@ namespace Application.DTOs
         // **NEW** outgoing URLs
         public List<string>? AttachmentUrls { get; set; }
     }
+}
 }
