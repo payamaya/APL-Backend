@@ -1,44 +1,55 @@
-﻿/*using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
 using AutoMapper;
-using Domain.Entities.Enums;
+using Domain.Entities;
+using Domain.Enums;
+using Infrastructure.Repositories.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories
+namespace Application.Services
 {
     public class UserService : IUserService
     {
-        private readonly AppDbContext _context;
+        private readonly IUserRepository _repository;
+        private readonly ICourseRepository _courseRepository; // Add ICourseRepository to handle courses
         private readonly IMapper _mapper;
 
-        public UserService(AppDbContext context, IMapper mapper)
+        public UserService(IUserRepository repository, ICourseRepository courseRepository, IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
+            _courseRepository = courseRepository;  // Inject ICourseRepository to access courses
             _mapper = mapper;
+        }
+
+        public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
+        {
+            var user = _mapper.Map<User>(dto);
+
+            // Optionally hash password if needed
+            // user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+            await _repository.AddAsync(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task AssignUserToCourseAsync(AssignUserToCourseDto dto)
         {
-            var user = await _context.Users
-                .Include(u => u.Courses)
-                .FirstOrDefaultAsync(u => u.Id == dto.UserId);
+            var user = await _repository.GetByIdAsync(dto.UserId);
+            if (user == null) throw new Exception("User not found");
 
-            if (user == null)
-                throw new Exception("User not found");
+            var course = await _courseRepository.GetByIdAsync(dto.CourseId); // Use course repository to fetch the course
+            if (course == null) throw new Exception("Course not found");
 
-            if (user.Role != Role.Teacher && user.Role != Role.Student)
-                throw new Exception("Only Teachers or Students can be assigned to courses");
+            user.Courses.Add(course);
+            await _repository.UpdateAsync(user);
+        }
 
-            var course = await _context.Courses.FindAsync(dto.CourseId);
-            if (course == null)
-                throw new Exception("Course not found");
-
-            // Prevent duplicates
-            if (!user.Courses.Any(c => c.Id == dto.CourseId))
-            {
-                user.Courses.Add(course);
-                await _context.SaveChangesAsync();
-            }
+        public async Task<List<UserDto>> GetAllTeachersAsync()
+        {
+            var teachers = await _repository.GetTeachersAsync();
+            return _mapper.Map<List<UserDto>>(teachers);
         }
     }
 }
-*/
