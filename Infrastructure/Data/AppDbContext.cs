@@ -18,6 +18,8 @@ namespace Infrastructure.Data
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Teacher> Teachers => Set<Teacher>();
+        public DbSet<Student> Students => Set<Student>();
+
 
 
 
