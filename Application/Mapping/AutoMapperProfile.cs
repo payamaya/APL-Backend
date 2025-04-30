@@ -26,6 +26,9 @@ namespace Application.Mapping
             CreateMap<CreateUserDto, User>();
             CreateMap<User, UserDto>();
 
+            CreateMap<FileRecord, FileDto>();
+            CreateMap<FileDto, FileRecord>();
+
         }
     }
 }
