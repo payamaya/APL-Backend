@@ -21,11 +21,6 @@ namespace Infrastructure.Data
         public DbSet<Student> Students => Set<Student>();
 
 
-        public DbSet<Student> Students => Set<Student>();
-
-
-
-
 
         //BUG: Need to be fixed!
         // Optionally, implement OnModelCreating if you need more configurations
