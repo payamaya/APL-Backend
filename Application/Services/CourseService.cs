@@ -1,42 +1,58 @@
-﻿/*using Application.DTOs;
+﻿using AutoMapper;
+using Domain.Entities;
+using Application.DTOs;
+using Infrastructure.Repositories.Interfaces;
 using Application.Interfaces;
 
 namespace Application.Services
 {
     public class CourseService : ICourseService
     {
+        private readonly ICourseRepository _repository;
+        private readonly IMapper _mapper;
 
-        public async Task<IEnumerable<CourseDto>> GetAllCoursesAsync()
+        public CourseService(ICourseRepository repository, IMapper mapper)
         {
-            // Temporary mock for testing
-            return await Task.FromResult(new List<CourseDto>
-            {
-                new CourseDto { Id = 1, Title = "Sample Course", Description = "Intro to Full Stack" }
-            });
-        }
-
-        public async Task<CourseDto?> GetCourseByIdAsync(int id)
-        {
-            // Temporary mock
-            return await Task.FromResult(new CourseDto { Id = id, Title = "Course " + id, Description = "Details..." });
+            _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<CourseDto> CreateCourseAsync(CourseDto dto)
         {
-            // Temporary mock
-            dto.Id = new Random().Next(100); // Simulate DB-generated ID
-            return await Task.FromResult(dto);
+            var course = _mapper.Map<Course>(dto);
+            await _repository.AddAsync(course);
+            return _mapper.Map<CourseDto>(course);
+        }
+
+        public async Task<bool> DeleteCourseAsync(Guid id)
+        {
+            var course = await _repository.GetByIdAsync(id);
+            if (course == null) return false;
+
+            await _repository.DeleteAsync(course);
+            return true;
+        }
+
+        public async Task<IEnumerable<CourseDto>> GetAllCoursesAsync()
+        {
+            var courses = await _repository.GetAllAsync();
+            return _mapper.Map<IEnumerable<CourseDto>>(courses);
+        }
+
+        public async Task<CourseDto?> GetCourseByIdAsync(Guid id)
+        {
+            var course = await _repository.GetByIdAsync(id);
+            return course == null ? null : _mapper.Map<CourseDto>(course);
         }
 
         public async Task<CourseDto> UpdateCourseAsync(CourseDto dto)
         {
-            return await Task.FromResult(dto); // Simulate update
-        }
+            var course = await _repository.GetByIdAsync(dto.Id);
+            if (course == null) throw new Exception("Course not found");
 
-        public async Task<bool> DeleteCourseAsync(int id)
-        {
-            return await Task.FromResult(true); // Simulate delete
+            _mapper.Map(dto, course);
+            await _repository.UpdateAsync(course);
+            return _mapper.Map<CourseDto>(course);
         }
     }
 }
-*/

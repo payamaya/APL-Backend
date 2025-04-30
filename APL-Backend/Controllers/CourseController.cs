@@ -1,7 +1,5 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
@@ -78,5 +76,6 @@ namespace APL_Backend.Controllers
         [HttpDelete("{id}")]
         //[Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteCourseAsync(id));
+
     }
 }
