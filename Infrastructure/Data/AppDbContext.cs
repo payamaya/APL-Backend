@@ -21,6 +21,8 @@ namespace Infrastructure.Data
         public DbSet<FileRecord> FileRecords { get; set; }
 
 
+        public DbSet<Student> Students => Set<Student>();
+
 
 
 

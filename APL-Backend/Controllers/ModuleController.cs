@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
@@ -57,4 +58,9 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Delete(Guid courseId, Guid moduleId) =>
             Ok(await _moduleService.DeleteModuleAsync(moduleId));
     }
+
+ 
 }
+
+
+
