@@ -12,8 +12,8 @@ namespace Application.DTOs
     {
         [Required]
         public IFormFile File { get; set; }
-        public Guid Id { get; internal set; }
-        public string FileName { get; internal set; }
+        public Guid Id { get; set; }
+        public string FileName { get; set; }
         //public string MimeType { get; internal set; }
         //public long FileSize { get; internal set; }
         //public DateTime UploadedAt { get; internal set; }

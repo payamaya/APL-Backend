@@ -15,7 +15,7 @@ namespace Domain.Entities
         public string Description { get; set; } = string.Empty;
 
         public Guid CourseId { get; set; }
-        public Course Course { get; set; }
+        public File Course { get; set; }
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
     }
 }

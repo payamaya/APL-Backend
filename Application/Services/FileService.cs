@@ -1,7 +1,10 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
@@ -23,45 +26,46 @@ namespace Application.Services
             }
         }
 
-        public async Task<Guid> SaveFileAsync(IFormFile file, Guid activityId)
+        public async Task<Guid> SaveFileAsync(FileDto dto)
         {
-            var fileId = Guid.NewGuid();
-            var fileName = $"{fileId}_{Path.GetFileName(file.FileName)}";
+            dto.Id = Guid.NewGuid();
+            var fileName = $"{Path.GetFileName(dto.FileName)}";
             var fullPath = Path.Combine(_uploadPath, fileName);
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                await dto.File.CopyToAsync(stream);
             }
 
             var entity = new FileRecord
             {
-                Id = fileId,
-                FileName = file.FileName,
+                Id = dto.Id,
+                FileName = fileName,
                 FilePath = fullPath,
-                Size = file.Length,
-                MimeType = string.IsNullOrWhiteSpace(file.ContentType)
+                Size = dto.File.Length,
+                MimeType = string.IsNullOrWhiteSpace(dto.File.ContentType)
                     ? "application/octet-stream"
-                    : file.ContentType,
-                ActivityId = activityId,
+                    : dto.File.ContentType,
+                ActivityId = dto.ActivityId,
                 UploadedAt = DateTime.UtcNow
             };
 
             _context.FileRecords.Add(entity);
             await _context.SaveChangesAsync();
 
-            return fileId;
+            return dto.Id;
         }
+
 
         public async Task<byte[]> DownloadFileAsync(Guid id)
         {
             var fileRecord = await _context.FileRecords.FirstOrDefaultAsync(f => f.Id == id);
-            if (fileRecord == null || !File.Exists(fileRecord.FilePath))
+            if (fileRecord == null || !System.IO.File.Exists(fileRecord.FilePath))
             {
                 throw new FileNotFoundException("File not found.");
             }
 
-            return await File.ReadAllBytesAsync(fileRecord.FilePath);
+            return await System.IO.File.ReadAllBytesAsync(fileRecord.FilePath);
         }
     }
 }

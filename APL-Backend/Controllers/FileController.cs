@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +17,15 @@ namespace APL_Backend.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> Upload(IFormFile file, [FromForm] Guid activityId)
+        public async Task<IActionResult> Upload([FromForm] FileDto dto)
         {
-            if (file == null || file.Length == 0)
+            if (dto.File == null || dto.File.Length == 0)
                 return BadRequest("No file provided.");
 
-            var fileId = await _fileService.SaveFileAsync(file, activityId);
+            var fileId = await _fileService.SaveFileAsync(dto);
             return Ok(new { FileId = fileId });
         }
+
 
         [HttpGet("download/{id}")]
         public async Task<IActionResult> Download(Guid id)

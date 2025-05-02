@@ -22,7 +22,7 @@ namespace Domain.Entities
         //Navigation
         public Guid CourseId { get; set; }
      /*   public Course Course { get; set; }*/
-        public ICollection<Course> Courses { get; set; } = new List<Course>();
+        public ICollection<File> Courses { get; set; } = new List<File>();
 
 
 
