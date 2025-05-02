@@ -8,6 +8,7 @@ namespace APL_Backend.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
+        private const int PAST_DATE_TOLERANCE_SECONDS = -30;
         private readonly ICourseService _courseService;
 
         public CourseController(ICourseService courseService)
@@ -33,7 +34,7 @@ namespace APL_Backend.Controllers
 
             // Validate the StartDate
             var utcNow = DateTime.UtcNow;
-            if (dto.StartDate < utcNow.AddSeconds(-30))
+            if (dto.StartDate < utcNow.AddSeconds(PAST_DATE_TOLERANCE_SECONDS))
             {
                 return BadRequest("Start date cannot be in the past.");
             }
