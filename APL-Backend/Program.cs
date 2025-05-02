@@ -4,6 +4,8 @@ using Application.Interfaces;
 using Infrastructure.Repositories;
 using Application.Mapping;
 using System.Text.Json.Serialization;
+using Infrastructure.Repositories.Interfaces;
+using Application.Services;
 using Infrastructure.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +30,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Register services
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IModuleService, ModuleService>();
+builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
+builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();  
 builder.Services.AddScoped<IFileStorage, LocalFileStorage>();   // Register your file‐storage provider
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 
 
 
