@@ -1,42 +1,42 @@
-﻿using Application.DTOs;
+﻿using Application.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    public class FileController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class FileController : ControllerBase
     {
-        [HttpPost("upload")]
-        public async Task<IActionResult> Upload([FromForm] FileDto dto)
+        private readonly IFileService _fileService;
+
+        public FileController(IFileService fileService)
         {
-            if (dto.File == null || dto.File.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            // Generate unique file name
-            var fileName = $"{Guid.NewGuid()}_{dto.File.FileName}";
-            var savePath = Path.Combine("wwwroot/uploads", fileName);
-
-            // Create directory if it doesn't exist
-            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-
-            using (var stream = new FileStream(savePath, FileMode.Create))
-            {
-                await dto.File.CopyToAsync(stream);
-            }
-
-            // Save metadata to DB
-            var fileRecord = new FileRecord
-            {
-                FileName = dto.File.FileName,
-                FilePath = savePath,
-                Size = dto.File.Length,
-                ActivityId = dto.ActivityId
-            };
-
-            _context.FileRecords.Add(fileRecord);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Uploaded!", fileId = fileRecord.Id });
+            _fileService = fileService;
         }
 
+        [HttpPost("upload")]
+        public async Task<IActionResult> Upload(IFormFile file, [FromForm] Guid activityId)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file provided.");
+
+            var fileId = await _fileService.SaveFileAsync(file, activityId);
+            return Ok(new { FileId = fileId });
+        }
+
+        [HttpGet("download/{id}")]
+        public async Task<IActionResult> Download(Guid id)
+        {
+            try
+            {
+                var bytes = await _fileService.DownloadFileAsync(id);
+                return File(bytes, "application/octet-stream", $"file_{id}");
+            }
+            catch (FileNotFoundException)
+            {
+                return NotFound("File not found.");
+            }
+        }
     }
 }

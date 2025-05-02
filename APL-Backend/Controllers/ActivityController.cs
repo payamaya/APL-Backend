@@ -39,7 +39,8 @@ namespace APL_Backend.Controllers
             }
 
             // Validate the StartDate
-            if (dto.StartDate < DateTime.UtcNow)
+            var utcNow = DateTime.UtcNow;
+            if (dto.StartDate < utcNow.AddSeconds(-5))
             {
                 return BadRequest("Start date cannot be in the past.");
             }

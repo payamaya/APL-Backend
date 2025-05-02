@@ -7,8 +7,9 @@ namespace Application.Interfaces
 {
     public interface IFileService
     {
-        Task<FileDto> SaveFileAsync(IFormFile file, Guid activityId);
-        Task<FileStreamResult> GetFileAsync(Guid fileId);
+        Task<Guid> SaveFileAsync(IFormFile file, Guid activityId);
+        Task<byte[]> DownloadFileAsync(Guid id);
+
     }
 
 }

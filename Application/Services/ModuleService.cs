@@ -12,12 +12,14 @@ namespace Application.Services
     public class ModuleService : IModuleService
     {
         private readonly IModuleRepository _repository;
+        private readonly ICourseRepository _courseRepository;
         private readonly IMapper _mapper;
 
-        public ModuleService(IModuleRepository repository, IMapper mapper)
+        public ModuleService(IModuleRepository repository, IMapper mapper, ICourseRepository courseRepository)
         {
             _repository = repository;
             _mapper = mapper;
+            _courseRepository = courseRepository;
         }
 
         public async Task<IEnumerable<ModuleDto>> GetAllModulesAsync(Guid courseId)
@@ -35,8 +37,8 @@ namespace Application.Services
         public async Task<ModuleDto> CreateModuleAsync(ModuleDto dto)
         {
             // Verify the course exists first
-            var courseExists = await _repository.GetByIdAsync(dto.CourseId, dto.CourseId) != null;
-            if (!courseExists)
+            var courseExists = await _courseRepository.GetByIdAsync(dto.CourseId);
+            if (courseExists == null)
             {
                 throw new InvalidOperationException($"Course with ID {dto.CourseId} does not exist");
             }
@@ -54,8 +56,8 @@ namespace Application.Services
             // Verify the course exists if CourseId is being updated
             if (module.CourseId != dto.CourseId)
             {
-                var courseExists = await _repository.GetByIdAsync(dto.CourseId, dto.CourseId) != null;
-                if (!courseExists)
+                var courseExists = await _courseRepository.GetByIdAsync(dto.CourseId);
+                if (courseExists == null)
                 {
                     throw new InvalidOperationException($"Course with ID {dto.CourseId} does not exist");
                 }

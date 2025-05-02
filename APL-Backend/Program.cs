@@ -40,6 +40,17 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
+// In your API project (e.g., Program.cs or Startup.cs)
+builder.Services.AddScoped<IFileService>(provider =>
+{
+    var env = provider.GetRequiredService<IWebHostEnvironment>();
+    var uploadPath = Path.Combine(env.WebRootPath ?? env.ContentRootPath, "uploads");
+    var db = provider.GetRequiredService<AppDbContext>();
+    return new FileService(db, uploadPath);
+});
+
+
 
 
 
