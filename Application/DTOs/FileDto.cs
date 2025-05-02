@@ -18,6 +18,6 @@ namespace Application.DTOs
         //public long FileSize { get; internal set; }
         //public DateTime UploadedAt { get; internal set; }
         //public string DownloadUrl { get; internal set; }
-        public Guid ActivityId { get; set; } // example linkage
+        public Guid ActivityId { get; set; } // Example FK
     }
 }

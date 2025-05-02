@@ -21,8 +21,19 @@ namespace Application.Services
 
         public async Task<Guid> SaveFileAsync(FileDto dto)
         {
+            // Limiting file types and size
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
+            var extension = Path.GetExtension(dto.File.FileName).ToLower();
+            if (!allowedExtensions.Contains(extension) || dto.File.Length > 10 * 1024 * 1024) // 10MB max
+            {
+                throw new InvalidOperationException("Invalid file type or file size exceeds the limit.");
+            }
+
+            // Generate a unique ID for the file
             dto.Id = Guid.NewGuid();
-            var fileName = $"{Path.GetFileName(dto.FileName)}";
+            var originalExtension = Path.GetExtension(dto.File.FileName); // e.g., ".pdf", ".jpg"
+            var baseName = Path.GetFileNameWithoutExtension(dto.FileName); // Just the name, no extension
+            var fileName = $"{baseName}{originalExtension}"; // Reconstruct with extension
             var fullPath = Path.Combine(_uploadPath, fileName);
 
             using (var stream = new FileStream(fullPath, FileMode.Create))
