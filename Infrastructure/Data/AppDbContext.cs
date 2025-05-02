@@ -23,8 +23,6 @@ namespace Infrastructure.Data
 
 
 
-
-
         //BUG: Need to be fixed!
         // Optionally, implement OnModelCreating if you need more configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)

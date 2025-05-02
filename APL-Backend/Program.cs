@@ -6,6 +6,7 @@ using Application.Mapping;
 using System.Text.Json.Serialization;
 using Infrastructure.Repositories.Interfaces;
 using Application.Services;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,20 +25,25 @@ builder.Services.AddCors(options =>
 // Register PostgreSQL DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"),
-        x => x.MigrationsAssembly("Infrastructure"))); // <-- Set migrations assembly to "Infrastructure"
+        x => x.MigrationsAssembly("Infrastructure")));
 
 
 // Register services
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
 builder.Services.AddScoped<IModuleService, ModuleService>();
 builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
+
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();  
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();

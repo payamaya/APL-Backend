@@ -17,6 +17,9 @@ namespace Application.Mapping
             CreateMap<TeacherDto, Teacher>();
             CreateMap<Teacher, TeacherDto>();
 
+            CreateMap<StudentDto, Student>();
+            CreateMap<Student, StudentDto>();
+
             CreateMap<ModuleDto, Module>();
             CreateMap<Module, ModuleDto>();
 
