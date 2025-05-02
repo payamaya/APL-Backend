@@ -29,7 +29,8 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Create([FromBody] StudentDto dto)
         {
             // Validate the StartDate
-      /*      if (dto.StartDate < DateTime.UtcNow)
+            var utcNow = DateTime.UtcNow;
+            if (dto.StartDate < utcNow.AddSeconds(-30))
             {
                 return BadRequest("Start date cannot be in the past.");
             }
@@ -37,7 +38,7 @@ namespace APL_Backend.Controllers
             if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
             {
                 return BadRequest("End date must be after start date.");
-            }*/
+            }
             var createdStudent = await _studentService.CreateStudentAsync(dto);
             return Ok(createdStudent);
         }

@@ -79,29 +79,29 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Course>> GetAllAsync()
+        public async Task<IEnumerable<Domain.Entities.File>> GetAllAsync()
         {
             return await _context.Courses.ToListAsync();
         }
 
-        public async Task<Course?> GetByIdAsync(Guid id)
+        public async Task<Domain.Entities.File?> GetByIdAsync(Guid id)
         {
             return await _context.Courses.FindAsync(id);
         }
 
-        public async Task AddAsync(Course course)
+        public async Task AddAsync(Domain.Entities.File course)
         {
             await _context.Courses.AddAsync(course);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Course course)
+        public async Task UpdateAsync(Domain.Entities.File course)
         {
             _context.Courses.Update(course);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Course course)
+        public async Task DeleteAsync(Domain.Entities.File course)
         {
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();

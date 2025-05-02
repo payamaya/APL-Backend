@@ -11,13 +11,14 @@ namespace Infrastructure.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Course> Courses => Set<Course>();
+        public DbSet<Domain.Entities.File> Courses => base.Set<Domain.Entities.File>();
         public DbSet<Module> Modules => Set<Module>();
 
         public DbSet<Activity> Activities => Set<Activity>();
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Teacher> Teachers => Set<Teacher>();
+        public DbSet<FileRecord> FileRecords { get; set; }
         public DbSet<Student> Students => Set<Student>();
 
 

@@ -11,8 +11,8 @@ namespace Application.Mapping
     {
         public MapperProfile()
         {
-            CreateMap<CourseDto, Course>();
-            CreateMap<Course, CourseDto>();
+            CreateMap<CourseDto, Domain.Entities.File>();
+            CreateMap<Domain.Entities.File, CourseDto>();
 
             CreateMap<TeacherDto, Teacher>();
             CreateMap<Teacher, TeacherDto>();
@@ -28,6 +28,9 @@ namespace Application.Mapping
 
             CreateMap<CreateUserDto, User>();
             CreateMap<User, UserDto>();
+
+            CreateMap<FileRecord, FileDto>();
+            CreateMap<FileDto, FileRecord>();
 
         }
     }

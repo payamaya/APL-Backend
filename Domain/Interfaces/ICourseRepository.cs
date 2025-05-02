@@ -7,10 +7,10 @@ namespace Infrastructure.Repositories.Interfaces
 {
     public interface ICourseRepository
     {
-        Task<IEnumerable<Course>> GetAllAsync();
-        Task<Course?> GetByIdAsync(Guid id);
-        Task AddAsync(Course course);
-        Task UpdateAsync(Course course);
-        Task DeleteAsync(Course course);
+        Task<IEnumerable<Domain.Entities.File>> GetAllAsync();
+        Task<Domain.Entities.File?> GetByIdAsync(Guid id);
+        Task AddAsync(Domain.Entities.File course);
+        Task UpdateAsync(Domain.Entities.File course);
+        Task DeleteAsync(Domain.Entities.File course);
     }
 }

@@ -19,7 +19,7 @@ namespace Application.Services
 
         public async Task<CourseDto> CreateCourseAsync(CourseDto dto)
         {
-            var course = _mapper.Map<Course>(dto);
+            var course = _mapper.Map<Domain.Entities.File>(dto);
             await _repository.AddAsync(course);
             return _mapper.Map<CourseDto>(course);
         }
