@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces;
+using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace Infrastructure.Repositories
 {
@@ -17,15 +17,10 @@ namespace Infrastructure.Repositories
         public async Task<FileRecord?> GetByIdAsync(Guid id) =>
             await _context.FileRecords.FindAsync(id);
 
-        public async Task AddAsync(FileRecord file)
-        {
+        public async Task AddAsync(FileRecord file) =>
             await _context.FileRecords.AddAsync(file);
-        }
 
-        public async Task SaveChangesAsync()
-        {
+        public async Task SaveChangesAsync() =>
             await _context.SaveChangesAsync();
-        }
-
     }
 }

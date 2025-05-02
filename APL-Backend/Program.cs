@@ -46,7 +46,7 @@ builder.Services.AddScoped<IFileService>(provider =>
 {
     var env = provider.GetRequiredService<IWebHostEnvironment>();
     var uploadPath = Path.Combine(env.WebRootPath ?? env.ContentRootPath, "uploads");
-    var db = provider.GetRequiredService<AppDbContext>();
+    var db = provider.GetRequiredService<IFileRepository>();
     return new FileService(db, uploadPath);
 });
 

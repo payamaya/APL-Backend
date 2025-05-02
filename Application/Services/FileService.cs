@@ -1,25 +1,18 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
     public class FileService : IFileService
     {
-        private readonly AppDbContext _context;
+        private readonly IFileRepository _fileRepository;
         private readonly string _uploadPath;
 
-        public FileService(AppDbContext context, string uploadPath)
+        public FileService(IFileRepository fileRepository, string uploadPath)
         {
-            _context = context;
+            _fileRepository = fileRepository;
             _uploadPath = uploadPath;
 
-            // Ensure the upload directory exists
             if (!Directory.Exists(_uploadPath))
             {
                 Directory.CreateDirectory(_uploadPath);
@@ -50,16 +43,15 @@ namespace Application.Services
                 UploadedAt = DateTime.UtcNow
             };
 
-            _context.FileRecords.Add(entity);
-            await _context.SaveChangesAsync();
+            await _fileRepository.AddAsync(entity);
+            await _fileRepository.SaveChangesAsync();
 
             return dto.Id;
         }
 
-
         public async Task<byte[]> DownloadFileAsync(Guid id)
         {
-            var fileRecord = await _context.FileRecords.FirstOrDefaultAsync(f => f.Id == id);
+            var fileRecord = await _fileRepository.GetByIdAsync(id);
             if (fileRecord == null || !System.IO.File.Exists(fileRecord.FilePath))
             {
                 throw new FileNotFoundException("File not found.");
