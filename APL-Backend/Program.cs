@@ -7,15 +7,23 @@ using System.Text.Json.Serialization;
 using Infrastructure.Repositories.Interfaces;
 using Application.Services;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Application.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+    options.HttpsPort = 7293; // <= This port is 443 in Production!
+});
 
 // Add CORS policy FIRST (before other services)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // Your Vite port
+        policy.WithOrigins("https://localhost:3000") // Your Vite port
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -47,14 +55,26 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
+
 // In your API project (e.g., Program.cs or Startup.cs)
 builder.Services.AddScoped<IFileService>(provider =>
 {
     var env = provider.GetRequiredService<IWebHostEnvironment>();
     var uploadPath = Path.Combine(env.WebRootPath ?? env.ContentRootPath, "uploads");
+
     var db = provider.GetRequiredService<IFileRepository>();
-    return new FileService(db, uploadPath);
+    var encryptionHelper = provider.GetRequiredService<EncryptionHelper>();
+
+    return new FileService(db, uploadPath, encryptionHelper);
 });
+
+builder.Services.AddSingleton<EncryptionHelper>(provider =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    return new EncryptionHelper(config);
+});
+
+
 
 
 

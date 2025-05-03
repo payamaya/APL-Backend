@@ -30,14 +30,24 @@ namespace APL_Backend.Controllers
         [HttpGet("download/{id}")]
         public async Task<IActionResult> Download(Guid id)
         {
+                var fileRecord = await _fileService.GetFileRecordAsync(id); // you may need this helper
+                if (fileRecord == null)
+                    return NotFound();
             try
             {
-                var bytes = await _fileService.DownloadFileAsync(id);
-                return File(bytes, "application/octet-stream", $"file_{id}");
+                var decryptedData = await _fileService.DownloadFileAsync(id); // returns decrypted bytes
+                if (decryptedData == null || decryptedData.Length == 0)
+                    return NotFound("Decrypted file content not found or is empty.");
+
+                return File(decryptedData, fileRecord.MimeType, fileRecord.FileName);
             }
-            catch (FileNotFoundException)
+            catch (InvalidOperationException ex)
             {
-                return NotFound("File not found.");
+                return BadRequest(ex.Message); // 400 if decryption fails
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An unexpected error occurred while downloading the file.");
             }
         }
     }
