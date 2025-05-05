@@ -30,10 +30,10 @@ namespace Infrastructure.Data
             base.OnModelCreating(modelBuilder);
 
             // You can enable the many-to-many relationship if needed
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Courses)
-                .WithMany(c => c.Users)
-                .UsingEntity(j => j.ToTable("UserCourses")); // Optional join table name
+            //modelBuilder.Entity<User>()
+            //    .HasMany(u => u.Courses)
+            //    .WithMany(c => c.Users)
+            //    .UsingEntity(j => j.ToTable("UserCourses")); // Optional join table name
 
             modelBuilder
                 .Entity<Teacher>()

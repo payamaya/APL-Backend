@@ -9,18 +9,10 @@ namespace Application.DTOs
 {
     public class UserDto
     {
-        public Guid Id { get; set; }
-        public string UserName { get; set; } = null!;
-        public string Password { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Role { get; set; } = null!;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty; // Optional: validate "Admin", "Teacher", "Student"
+    }
 
-        public string Description { get; set; } = string.Empty;
+}
 
-        [Phone]
-        [MaxLength(20)]
-        public string Telephone { get; set; }
-        public Guid? CourseId { get; set; } // Required foreign key
-        
-}
-}
