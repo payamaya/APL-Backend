@@ -1,55 +1,41 @@
 ﻿using Application.DTOs;
+using Application.Helpers;
 using Application.Interfaces;
-using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 using Infrastructure.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace Application.Services
+public class UserService : IUserService
 {
-    public class UserService : IUserService
+    private readonly IUserRepository _userRepository;
+
+    public UserService(IUserRepository userRepository)
     {
-        private readonly IUserRepository _repository;
-        private readonly ICourseRepository _courseRepository; // Add ICourseRepository to handle courses
-        private readonly IMapper _mapper;
-
-        public UserService(IUserRepository repository, ICourseRepository courseRepository, IMapper mapper)
-        {
-            _repository = repository;
-            _courseRepository = courseRepository;  // Inject ICourseRepository to access courses
-            _mapper = mapper;
-        }
-
-        public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
-        {
-            var user = _mapper.Map<User>(dto);
-
-            // Optionally hash password if needed
-            // user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-
-            await _repository.AddAsync(user);
-            return _mapper.Map<UserDto>(user);
-        }
-
-        public async Task AssignUserToCourseAsync(AssignUserToCourseDto dto)
-        {
-            var user = await _repository.GetByIdAsync(dto.UserId);
-            if (user == null) throw new Exception("User not found");
-
-            var course = await _courseRepository.GetByIdAsync(dto.CourseId); // Use course repository to fetch the course
-            if (course == null) throw new Exception("Course not found");
-
-            user.Courses.Add(course);
-            await _repository.UpdateAsync(user);
-        }
-
-        public async Task<List<UserDto>> GetAllTeachersAsync()
-        {
-            var teachers = await _repository.GetTeachersAsync();
-            return _mapper.Map<List<UserDto>>(teachers);
-        }
+        _userRepository = userRepository;
     }
+
+    public async Task<Guid> RegisterAsync(UserDto dto)
+    {
+        // 1. Check if email exists
+        var existingUser = await _userRepository.FindByEmailAsync(dto.Email);
+        if (existingUser != null)
+            throw new InvalidOperationException("Email already in use.");
+
+        // 2. Hash the password
+        var passwordHash = PasswordHasher.Hash(dto.Password);
+
+        // 3. Create user
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            Email = dto.Email,
+            PasswordHash = passwordHash,
+            Role = dto.Role
+        };
+
+        await _userRepository.AddAsync(user);
+        await _userRepository.SaveChangesAsync();
+
+        return user.Id;
+    }
+
 }

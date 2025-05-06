@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactFrontend", policy =>
     {
-        policy.WithOrigins("https://localhost:3000") // Your Vite port
+        policy.WithOrigins("http://localhost:3000") // Your Vite port
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -56,6 +56,10 @@ builder.Services.AddScoped<ITeacherService, TeacherService>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
 // In your API project (e.g., Program.cs or Startup.cs)
 builder.Services.AddScoped<IFileService>(provider =>
 {
@@ -74,6 +78,17 @@ builder.Services.AddSingleton<EncryptionHelper>(provider =>
     return new EncryptionHelper(config);
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdmin", policy =>
+        policy.RequireRole(Domain.Enums.Role.Admin.ToString())); // Convert enum to string
+
+    options.AddPolicy("RequireTeacher", policy =>
+        policy.RequireRole(Domain.Enums.Role.Teacher.ToString()));
+
+    options.AddPolicy("RequireStudent", policy =>
+        policy.RequireRole(Domain.Enums.Role.Student.ToString()));
+});
 
 
 

@@ -7,11 +7,9 @@ namespace Infrastructure.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User?> GetByIdAsync(Guid id);
-        Task<List<User>> GetAllAsync();
+        Task<User?> FindByEmailAsync(string email);
         Task AddAsync(User user);
-        Task UpdateAsync(User user);
-        Task DeleteAsync(User user);
-        Task<List<User>> GetTeachersAsync();
+        Task SaveChangesAsync();
     }
+
 }
