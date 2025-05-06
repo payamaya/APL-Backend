@@ -1,6 +1,5 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using Application.DTOs;
+﻿using Application.DTOs;
+using Application.Helpers;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Repositories.Interfaces;
@@ -22,7 +21,7 @@ public class UserService : IUserService
             throw new InvalidOperationException("Email already in use.");
 
         // 2. Hash the password
-        var passwordHash = HashPassword(dto.Password);
+        var passwordHash = PasswordHasher.Hash(dto.Password);
 
         // 3. Create user
         var user = new User
@@ -39,11 +38,4 @@ public class UserService : IUserService
         return user.Id;
     }
 
-    private string HashPassword(string password)
-    {
-        using var sha256 = SHA256.Create();
-        var bytes = Encoding.UTF8.GetBytes(password);
-        var hash = sha256.ComputeHash(bytes);
-        return Convert.ToBase64String(hash);
-    }
 }

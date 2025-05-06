@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactFrontend", policy =>
     {
-        policy.WithOrigins("https://localhost:3000") // Your Vite port
+        policy.WithOrigins("http://localhost:3000") // Your Vite port
               .AllowAnyHeader()
               .AllowAnyMethod();
     });

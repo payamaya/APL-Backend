@@ -20,8 +20,8 @@ namespace Application.Services
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto dto)
     {
         var user = await _userRepository.FindByEmailAsync(dto.Email);
-            // - || !PasswordHasher.Verify(dto.Password, user.PasswordHash)
-            if (user == null)
+
+            if (user == null || !PasswordHasher.Verify(dto.Password, user.PasswordHash))
         {
             throw new UnauthorizedAccessException("Invalid credentials.");
         }
