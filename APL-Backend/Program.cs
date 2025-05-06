@@ -8,6 +8,10 @@ using Infrastructure.Repositories.Interfaces;
 using Application.Services;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Application.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,10 +92,33 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("RequireStudent", policy =>
         policy.RequireRole(Domain.Enums.Role.Student.ToString()));
+
+    options.AddPolicy("RequireStaff", policy =>
+        policy.RequireRole(Domain.Enums.Role.Student.ToString(),Domain.Enums.Role.Teacher.ToString()));
 });
 
 
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]);
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+});
 
 
 
@@ -124,6 +151,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("ReactFrontend");
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

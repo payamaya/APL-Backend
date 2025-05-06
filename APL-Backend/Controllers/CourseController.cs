@@ -1,9 +1,11 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
+    [Authorize(Policy = "RequireAdmin")]
     [Route("api/[controller]")]
     [ApiController]
     public class CourseController : ControllerBase
@@ -17,11 +19,9 @@ namespace APL_Backend.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Admin,Teacher,Student")]
         public async Task<IActionResult> GetAll() => Ok(await _courseService.GetAllCoursesAsync());
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Admin,Teacher,Student")]
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _courseService.GetCourseByIdAsync(id);
@@ -51,7 +51,6 @@ namespace APL_Backend.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CourseDto dto)
         {
             if (id != dto.Id) return BadRequest("ID mismatch");
@@ -76,7 +75,6 @@ namespace APL_Backend.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteCourseAsync(id));
 
     }

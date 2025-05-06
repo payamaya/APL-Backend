@@ -1,11 +1,13 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace APL_Backend.Controllers
 {
+    [Authorize(Policy = "RequireTeacher")]
     [Route("api/course/module/{moduleId}/[controller]")]
     [ApiController]
     public class ActivityController : ControllerBase

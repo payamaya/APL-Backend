@@ -1,9 +1,11 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
+    [Authorize(Policy = "RequireAdmin")]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -15,8 +17,8 @@ namespace APL_Backend.Controllers
         {
             _studentService = studentService;
         }
+        
         [HttpGet]
-        //[Authorize(Roles = "Admin,Teacher,Student")]
         public async Task<IActionResult> GetAll() => Ok(await _studentService.GetAllStudentsAsync());
 
         [HttpGet("{id}")]

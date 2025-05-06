@@ -3,6 +3,8 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,6 +22,8 @@ namespace Application.Services
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost("create-teacher")]
         public async Task<TeacherDto> CreateTeacherAsync(TeacherDto dto)
         {
             var teacher = _mapper.Map<Teacher>(dto);

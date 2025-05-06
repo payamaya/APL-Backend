@@ -1,10 +1,12 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
+    [Authorize(Policy = "RequireStaff")]
     [Route("api/[controller]")]
     [ApiController]
     public class FileController : ControllerBase
