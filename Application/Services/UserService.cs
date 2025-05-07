@@ -72,7 +72,14 @@ public class UserService : IUserService
                     break;
 
                 case Role.Admin:
-                    throw new InvalidOperationException("Manual admin creation is not allowed.");
+                    var userA = new User
+                    {
+                        Id = new Guid(),
+                        Email = user.Email,
+                        // Other teacher-specific fields if needed
+                    };
+                    await _repos.Users.AddAsync(userA);
+                    break;
             }
 
             await transaction.CommitAsync();

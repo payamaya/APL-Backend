@@ -27,7 +27,7 @@ namespace APL_Backend.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Policy = "RequireAdmin")]
+        [Authorize(Policy = "RequireAdmin")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto dto)
         {
