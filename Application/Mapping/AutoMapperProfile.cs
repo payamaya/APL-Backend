@@ -1,9 +1,6 @@
-﻿using System.Xml.Linq;
-using Application.DTOs;
+﻿using Application.DTOs;
 using AutoMapper;
-using DocumentFormat.OpenXml.Presentation;
 using Domain.Entities;
-
 
 namespace Application.Mapping
 {
@@ -11,8 +8,8 @@ namespace Application.Mapping
     {
         public MapperProfile()
         {
-            CreateMap<CourseDto, Domain.Entities.File>();
-            CreateMap<Domain.Entities.File, CourseDto>();
+            CreateMap<CourseDto, Course>();
+            CreateMap<Course, CourseDto>();
 
             CreateMap<TeacherDto, Teacher>();
             CreateMap<Teacher, TeacherDto>();

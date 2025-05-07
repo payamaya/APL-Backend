@@ -11,6 +11,8 @@ using Application.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Domain.Enums;
+using Domain.Interfaces;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +52,8 @@ builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
 
+builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
@@ -85,16 +89,16 @@ builder.Services.AddSingleton<EncryptionHelper>(provider =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdmin", policy =>
-        policy.RequireRole(Domain.Enums.Role.Admin.ToString())); // Convert enum to string
+        policy.RequireRole(Role.Admin.ToString())); // Convert enum to string
 
     options.AddPolicy("RequireTeacher", policy =>
-        policy.RequireRole(Domain.Enums.Role.Teacher.ToString()));
+        policy.RequireRole(Role.Teacher.ToString()));
 
     options.AddPolicy("RequireStudent", policy =>
-        policy.RequireRole(Domain.Enums.Role.Student.ToString()));
+        policy.RequireRole(Role.Student.ToString()));
 
     options.AddPolicy("RequireStaff", policy =>
-        policy.RequireRole(Domain.Enums.Role.Student.ToString(),Domain.Enums.Role.Teacher.ToString()));
+        policy.RequireRole(Role.Student.ToString(),Role.Teacher.ToString()));
 });
 
 

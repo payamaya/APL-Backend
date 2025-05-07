@@ -22,7 +22,6 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost("create-teacher")]
         public async Task<TeacherDto> CreateTeacherAsync(TeacherDto dto)
         {

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Domain.Entities;
-
+﻿
 public class FileRecord
 {
     public Guid Id { get; set; }
@@ -13,10 +11,5 @@ public class FileRecord
     public DateTime UploadedAt { get; set; }
 
     public Guid? ActivityId { get; set; }
-    public Activity Activity { get; set; } // FK link
 
-    //public string MimeType { get; internal set; }
-    //public long FileSize { get; internal set; }
-    //public DateTime UploadedAt { get; internal set; }
-    //public string DownloadUrl { get; internal set; }
 }

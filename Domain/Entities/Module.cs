@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Domain.Entities
 {
     public class Module
@@ -15,7 +10,6 @@ namespace Domain.Entities
         public string Description { get; set; } = string.Empty;
 
         public Guid CourseId { get; set; }
-        public File Course { get; set; }
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
     }
 }
