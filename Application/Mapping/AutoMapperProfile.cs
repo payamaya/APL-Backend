@@ -23,7 +23,7 @@ namespace Application.Mapping
             CreateMap<ActivityDto, Activity>();
             CreateMap<Activity, ActivityDto>();
 
-            CreateMap<CreateUserDto, User>();
+            CreateMap<UserDto, User>();
             CreateMap<User, UserDto>();
 
             CreateMap<FileRecord, FileDto>();

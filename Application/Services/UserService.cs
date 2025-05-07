@@ -75,9 +75,7 @@ public class UserService : IUserService
                     throw new InvalidOperationException("Manual admin creation is not allowed.");
             }
 
-            await _context.SaveChangesAsync();
             await transaction.CommitAsync();
-
             return user.Id;
         }
         catch

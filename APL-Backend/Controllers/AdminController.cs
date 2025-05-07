@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    [Authorize(Policy = "RequireAdmin")]    
+    //[Authorize(Policy = "RequireAdmin")]    
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
