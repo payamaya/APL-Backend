@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    //[Authorize(Policy = "RequireAdmin")]    
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -28,6 +27,7 @@ namespace APL_Backend.Controllers
             return Ok("User created successfully!"); // Return a success message instead
         }
 
+        [Authorize(Policy = "RequireAdmin")]
         [HttpPost("assign-course")]
         public async Task<IActionResult> AssignToCourse([FromBody] UserDto dto)
         {
