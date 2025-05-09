@@ -24,7 +24,7 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> GetAll(Guid moduleId) =>
             Ok(await _activityService.GetAllActivitiesAsync(moduleId));
 
-        [Authorize(Roles = "Teacher,Student")]
+        //[Authorize(Roles = "Teacher,Student")]
         [HttpGet("{activityId}")]
         public async Task<IActionResult> Get(Guid moduleId, Guid activityId)
         {
