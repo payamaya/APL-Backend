@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    [Authorize(Policy = "RequireAdmin")]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -17,10 +16,12 @@ namespace APL_Backend.Controllers
         {
             _studentService = studentService;
         }
-        
+
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _studentService.GetAllStudentsAsync());
 
+        //[Authorize(Roles = "Admin,Teacher")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -28,24 +29,16 @@ namespace APL_Backend.Controllers
             return result == null ? NotFound() : Ok(result);
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] StudentDto dto)
         {
             // Validate the StartDate
-            var utcNow = DateTime.UtcNow;
-            if (dto.StartDate < utcNow.AddSeconds(PAST_DATE_TOLERANCE_SECONDS))
-            {
-                return BadRequest("Start date cannot be in the past.");
-            }
-            // Validate that EndDate (if provided) is after StartDate
-            if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
-            {
-                return BadRequest("End date must be after start date.");
-            }
             var createdStudent = await _studentService.CreateStudentAsync(dto);
             return Ok(createdStudent);
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] StudentDto dto)
         {
@@ -54,6 +47,7 @@ namespace APL_Backend.Controllers
             return Ok(updatedStudent);
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

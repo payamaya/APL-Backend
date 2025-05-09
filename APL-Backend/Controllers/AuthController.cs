@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.Interfaces;
+using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,7 @@ namespace APL_Backend.Controllers
             return Ok(result);
         }
 
-        [Authorize(Policy = "RequireAdmin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto dto)
         {

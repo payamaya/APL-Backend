@@ -5,9 +5,12 @@ namespace Application.Interfaces
 {
     public interface IUserService
     {
-        Task AssignUserToCourseAsync(UserDto dto);
-        Task<Guid> CreateUserAsync(UserDto dto);
         Task<Guid> RegisterAsync(UserDto dto);
+        Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        Task<UserDto?> GetUserByIdAsync(Guid id);
+        Task<UserDto> CreateUserAsync(UserDto dto);
+        Task<UserDto> UpdateUserAsync(UserDto dto);
+        Task<bool> DeleteUserAsync(Guid id);
     }
 
 }

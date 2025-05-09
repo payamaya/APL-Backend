@@ -12,5 +12,6 @@ namespace Infrastructure.Repositories.Interfaces
         Task AddAsync(Teacher teacher);
         Task UpdateAsync(Teacher teacher);
         Task DeleteAsync(Teacher teacher);
+        Task SaveChangesAsync();
     }
 }

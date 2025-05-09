@@ -26,6 +26,7 @@ namespace Application.DTOs
         [Phone]
         [MaxLength(20)]
         public string Telephone { get; set; } = string.Empty;
+
     }
 
 }

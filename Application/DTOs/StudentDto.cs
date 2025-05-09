@@ -16,10 +16,7 @@ namespace Application.DTOs
         [MaxLength(20)]
         public string Telephone { get; set; } = string.Empty;
         public string? Address { get; set; } = string.Empty;
-        public ICollection<CourseDto> Courses { get; set; } = new List<CourseDto>();
-        
-        public DateTime? StartDate { get; set; } 
-        public DateTime? EndDate { get; set; } // Nullable to allow for no due date
+        //public ICollection<CourseDto> Courses { get; set; } = new List<CourseDto>();
         
         public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 

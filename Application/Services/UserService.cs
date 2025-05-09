@@ -2,45 +2,39 @@
 using Application.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
+   
 using Infrastructure.Data;
 
 public class UserService : IUserService
 {
     private readonly IRepositoryWrapper _repos;
     private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
-    public UserService(IRepositoryWrapper repos, AppDbContext context)
+    public UserService(IRepositoryWrapper repos, AppDbContext context, IMapper mapper)
     {
         _repos = repos;
         _context = context;
+        _mapper = mapper;
     }
 
-    public Task AssignUserToCourseAsync(UserDto dto)
+    public async Task<Guid> RegisterAsync(UserDto dto)
     {
-        throw new NotImplementedException();
-    }
-    public async Task<Guid> CreateUserAsync(UserDto dto)
-    {
-        // Check if email already exists
-        var existingUser = await _repos.Users.FindByEmailAsync(dto.Email);
-        if (existingUser != null)
-            throw new ConflictException("Email is already in use.");
+        var existing = await _repos.Users.FindByEmailAsync(dto.Email);
+        if (existing != null)
+            throw new ConflictException("Email already in use.");
 
         using var transaction = await _context.Database.BeginTransactionAsync();
-
         try
         {
-            // Hash the password
-            var passwordHash = PasswordHasher.Hash(dto.Password);
-
-            // Create core User entity
             var user = new User
             {
                 Email = dto.Email,
-                PasswordHash = passwordHash,
+                Password = PasswordHasher.Hash(dto.Password),
                 Role = dto.Role,
                 CreatedAt = DateTime.UtcNow
             };
@@ -48,29 +42,14 @@ public class UserService : IUserService
             await _repos.Users.AddAsync(user);
             await _repos.Users.SaveChangesAsync();
 
-            // Create a corresponding domain entity
             switch (dto.Role)
             {
                 case Role.Student:
-                    var student = new Student
-                    {
-                        UserId = user.Id,
-                        Email = user.Email,
-                        // Other student-specific fields if needed
-                    };
-                    await _repos.Students.AddAsync(student);
+                    await _repos.Students.AddAsync(new Student { UserId = user.Id, Email = user.Email });
                     break;
-
                 case Role.Teacher:
-                    var teacher = new Teacher
-                    {
-                        UserId = user.Id,
-                        Email = user.Email,
-                        // Other teacher-specific fields if needed
-                    };
-                    await _repos.Teachers.AddAsync(teacher);
+                    await _repos.Teachers.AddAsync(new Teacher { UserId = user.Id, Email = user.Email });
                     break;
-
                 case Role.Admin:
                     var userA = new User
                     {
@@ -92,45 +71,66 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Guid> RegisterAsync(UserDto dto)
+    public async Task<UserDto> CreateUserAsync(UserDto dto)
     {
+        // Update the method call to specify the correct interface or namespace to resolve ambiguity
         var existing = await _repos.Users.FindByEmailAsync(dto.Email);
         if (existing != null)
             throw new ConflictException("Email already in use.");
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
+        var user = _mapper.Map<User>(dto);
+        user.Id = Guid.NewGuid();
+        user.Password = PasswordHasher.Hash(dto.Password); // Assuming dto.Password is provided
+        user.CreatedAt = DateTime.UtcNow;
+
+        await _repos.Users.AddAsync(user);
+        await _repos.Users.SaveChangesAsync();
+
+        return _mapper.Map<UserDto>(user);
+    }
+
+
+    public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
+    {
+        var users = await _repos.Users.GetAllAsync();
+        return _mapper.Map<IEnumerable<UserDto>>(users);
+    }
+
+    public async Task<UserDto> GetUserByIdAsync(Guid id)
+    {
+        var user = await _repos.Users.GetByIdAsync(id);
+        if (user == null)
+            throw new Exception("User not found.");
+
+        return _mapper.Map<UserDto>(user);
+    }
+
+    public async Task<UserDto> UpdateUserAsync(UserDto dto)
+    {
+        var user = await _repos.Users.GetByIdAsync(dto.Id);
+        if (user == null)
+            throw new Exception("User not found.");
+
+        // Update fields (but don't update sensitive fields unless explicitly required)
+        user.Email = dto.Email;
+        user.Role = dto.Role;
+        if (!string.IsNullOrEmpty(dto.Password))
         {
-            var user = new User
-            {
-                Email = dto.Email,
-                PasswordHash = PasswordHasher.Hash(dto.Password),
-                Role = dto.Role,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await _repos.Users.AddAsync(user);
-            await _repos.Users.SaveChangesAsync();
-
-            switch (dto.Role)
-            {
-                case Role.Student:
-                    await _repos.Students.AddAsync(new Student { UserId = user.Id, Email = user.Email });
-                    break;
-                case Role.Teacher:
-                    await _repos.Teachers.AddAsync(new Teacher { UserId = user.Id, Email = user.Email });
-                    break;
-                case Role.Admin:
-                    throw new InvalidOperationException("Admins cannot be registered manually.");
-            }
-
-            await transaction.CommitAsync();
-            return user.Id;
+            user.Password = PasswordHasher.Hash(dto.Password);
         }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
+
+        await _repos.Users.SaveChangesAsync();
+        return _mapper.Map<UserDto>(user);
+    }
+
+    public async Task<bool> DeleteUserAsync(Guid id)
+    {
+        var user = await _repos.Users.GetByIdAsync(id);
+        if (user == null)
+            return false;
+
+        _repos.Users.Delete(user);
+        await _repos.Users.SaveChangesAsync();
+        return true;
     }
 }

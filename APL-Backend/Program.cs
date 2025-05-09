@@ -31,7 +31,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000") // Your Vite port
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -85,23 +86,6 @@ builder.Services.AddSingleton<EncryptionHelper>(provider =>
     var config = provider.GetRequiredService<IConfiguration>();
     return new EncryptionHelper(config);
 });
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdmin", policy =>
-        policy.RequireRole(Role.Admin.ToString())); // Convert enum to string
-
-    options.AddPolicy("RequireTeacher", policy =>
-        policy.RequireRole(Role.Teacher.ToString()));
-
-    options.AddPolicy("RequireStudent", policy =>
-        policy.RequireRole(Role.Student.ToString()));
-
-    options.AddPolicy("RequireStaff", policy =>
-        policy.RequireRole(Role.Student.ToString(),Role.Teacher.ToString()));
-});
-
-
 
 builder.Services.AddAuthentication(options =>
 {
