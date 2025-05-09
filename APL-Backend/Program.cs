@@ -8,6 +8,12 @@ using Infrastructure.Repositories.Interfaces;
 using Application.Services;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Application.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Domain.Enums;
+using Domain.Interfaces;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +31,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000") // Your Vite port
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -45,6 +52,8 @@ builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
 
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+
+builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
@@ -78,20 +87,26 @@ builder.Services.AddSingleton<EncryptionHelper>(provider =>
     return new EncryptionHelper(config);
 });
 
-builder.Services.AddAuthorization(options =>
+builder.Services.AddAuthentication(options =>
 {
-    options.AddPolicy("RequireAdmin", policy =>
-        policy.RequireRole(Domain.Enums.Role.Admin.ToString())); // Convert enum to string
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]);
 
-    options.AddPolicy("RequireTeacher", policy =>
-        policy.RequireRole(Domain.Enums.Role.Teacher.ToString()));
-
-    options.AddPolicy("RequireStudent", policy =>
-        policy.RequireRole(Domain.Enums.Role.Student.ToString()));
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
 });
-
-
-
 
 
 
@@ -124,6 +139,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("ReactFrontend");
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

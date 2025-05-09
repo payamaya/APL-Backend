@@ -1,11 +1,15 @@
 ﻿//using Application.DTOs;
 //using Application.Interfaces;
+//using Domain.Entities;
 //using Infrastructure.Repositories;
+//using Infrastructure.Repositories.Interfaces;
+//using Microsoft.AspNetCore.Authorization;
 //using Microsoft.AspNetCore.Http;
 //using Microsoft.AspNetCore.Mvc;
 
 //namespace APL_Backend.Controllers
 //{
+//    [Authorize(Roles = "Admin")]
 //    [Route("api/[controller]")]
 //    [ApiController]
 //    public class AdminController : ControllerBase
@@ -18,25 +22,18 @@
 //        }
 
 //        [HttpPost("create-user")]
-//        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
+//        public async Task<IActionResult> CreateUser([FromBody] UserDto dto)
 //        {
-//            var user = await _userService.CreateUserAsync(dto);
-//            return Ok(user);
+//            await _userService.CreateUserAsync(dto); // Removed assignment to a variable
+//            return Ok("User created successfully!"); // Return a success message instead
 //        }
 
 //        [HttpPost("assign-course")]
-//        public async Task<IActionResult> AssignToCourse([FromBody] AssignUserToCourseDto dto)
+//        public async Task<IActionResult> AssignToCourse([FromBody] UserDto dto)
 //        {
 //            await _userService.AssignUserToCourseAsync(dto);
 //            return Ok("Assigned Successfully!");
 //        }
-
-//        //[HttpGet("teachers")]
-//        //public async Task<IActionResult> GetAllTeachers()
-//        //{
-//        //    var users = await _userService.GetAllTeachersAsync();
-//        //    return Ok(users);
-//        //}
 
 //    }
 //}

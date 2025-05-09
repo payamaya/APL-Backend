@@ -18,14 +18,14 @@ namespace Application.DTOs
         public string Title { get; set; } = string.Empty; // ⛔ Remove `internal set`
         public TeacherType TeacherType { get; set; }
 
-        //[EmailAddress]
-        //[MaxLength(20)]
+        [EmailAddress]
+        [MaxLength(20)]
         public string Email { get; set; } = string.Empty; // ⛔ Remove `internal set`
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
-        //[Phone]
-        //[MaxLength(20)]
-        public string Telephone { get; set; }
-
+        [Phone]
+        [MaxLength(20)]
+        public string Telephone { get; set; } = string.Empty;
 
     }
 

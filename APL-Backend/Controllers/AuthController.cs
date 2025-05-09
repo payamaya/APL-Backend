@@ -1,6 +1,8 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.Interfaces;
+using Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
@@ -18,6 +20,7 @@ namespace APL_Backend.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto dto)
         {
@@ -25,6 +28,7 @@ namespace APL_Backend.Controllers
             return Ok(result);
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto dto)
         {

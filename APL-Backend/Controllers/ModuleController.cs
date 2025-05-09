@@ -1,10 +1,11 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
+    //[Authorize(Roles = "Teacher")]
     [Route("api/course/{courseId}/[controller]")]
     [ApiController]
     public class ModuleController : ControllerBase

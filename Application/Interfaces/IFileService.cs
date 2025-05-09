@@ -1,7 +1,5 @@
 ﻿
 using Application.DTOs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Interfaces
 {

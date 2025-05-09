@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
@@ -16,18 +17,19 @@ namespace APL_Backend.Controllers
             _courseService = courseService;
         }
 
-        [HttpGet]
         //[Authorize(Roles = "Admin,Teacher,Student")]
+        [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _courseService.GetAllCoursesAsync());
 
-        [HttpGet("{id}")]
         //[Authorize(Roles = "Admin,Teacher,Student")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _courseService.GetCourseByIdAsync(id);
             return result == null ? NotFound() : Ok(result);
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CourseDto dto)
         {
@@ -50,8 +52,8 @@ namespace APL_Backend.Controllers
             return Ok(createdCourse);
         }
 
-        [HttpPut("{id}")]
         //[Authorize(Roles = "Admin,Teacher")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CourseDto dto)
         {
             if (id != dto.Id) return BadRequest("ID mismatch");
@@ -75,8 +77,8 @@ namespace APL_Backend.Controllers
             return Ok(await _courseService.UpdateCourseAsync(dto));
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteCourseAsync(id));
 
     }

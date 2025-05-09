@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.DTOs
@@ -14,10 +9,6 @@ namespace Application.DTOs
         public IFormFile File { get; set; }
         public Guid Id { get; set; }
         public string FileName { get; set; }
-        //public string MimeType { get; internal set; }
-        //public long FileSize { get; internal set; }
-        //public DateTime UploadedAt { get; internal set; }
-        //public string DownloadUrl { get; internal set; }
         public Guid ActivityId { get; set; } // Example FK
     }
 }
