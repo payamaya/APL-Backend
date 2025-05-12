@@ -13,17 +13,17 @@ namespace Application.Services
 {
     public class AuthService : IAuthService
 {
-    private readonly IRepositoryWrapper _repos;
-    private readonly IEmailVerificationRepository _iEmail;
-    private readonly IOtpCodeRepository _otpCodeRepository;
     private readonly AppDbContext _context;
-    private readonly IEmailService _emailService;
+    private readonly IRepositoryWrapper _repos;
     private readonly IConfiguration _config;
+    private readonly IEmailVerificationRepository _iEmail;
+    private readonly IEmailService _emailService;
+    private readonly IOtpCodeRepository _otpCodeRepository;
         public AuthService(AppDbContext context, IRepositoryWrapper repos, IConfiguration config, IEmailVerificationRepository emailVerificationRepository, IEmailService emailService, IOtpCodeRepository otpCodeRepository)
     {
-        _config = config;
-        _repos = repos;
         _context = context;
+        _repos = repos;
+        _config = config;
         _iEmail = emailVerificationRepository;
         _emailService = emailService;
         _otpCodeRepository = otpCodeRepository;
@@ -133,14 +133,13 @@ namespace Application.Services
 
                 await _iEmail.AddAsync(email);
                 await _repos.Users.SaveChangesAsync();
-                await transaction.CommitAsync();
 
                 // 4. Build confirmation URL
                 var confirmUrl = $"{"http://localhost:3000"}/confirm?token={token}";
 
                 // 5. Send confirmation email
                 var subject = "Confirm your account";
-                var body = $"Click <a href='{confirmUrl}'>here</a> to confirm your email.";
+                var body = $"<h1>Welcome</h1> Click <a href='{confirmUrl}'>here</a> to confirm your email.";
 
                 await _emailService.SendEmailAsync(dto.Email, subject, body);
                 await transaction.CommitAsync();

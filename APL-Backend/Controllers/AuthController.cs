@@ -28,7 +28,6 @@ namespace APL_Backend.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Admin")]
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto dto)
