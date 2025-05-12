@@ -36,6 +36,7 @@ public class UserService : IUserService
                 Email = dto.Email,
                 Password = PasswordHasher.Hash(dto.Password),
                 Role = dto.Role,
+                EmailConfirmed = false,
                 CreatedAt = DateTime.UtcNow
             };
 

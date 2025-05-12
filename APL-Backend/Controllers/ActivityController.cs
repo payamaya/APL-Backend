@@ -19,12 +19,12 @@ namespace APL_Backend.Controllers
             _activityService = activityService;
         }
 
-        //[Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher")]
         [HttpGet]
         public async Task<IActionResult> GetAll(Guid moduleId) =>
             Ok(await _activityService.GetAllActivitiesAsync(moduleId));
 
-        //[Authorize(Roles = "Teacher,Student")]
+        [Authorize(Roles = "Teacher,Student")]
         [HttpGet("{activityId}")]
         public async Task<IActionResult> Get(Guid moduleId, Guid activityId)
         {
@@ -32,7 +32,7 @@ namespace APL_Backend.Controllers
             return result == null ? NotFound() : Ok(result);
         }
 
-        //[Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher")]
         [HttpPost]
         public async Task<IActionResult> Create(Guid moduleId, [FromBody] ActivityDto dto)
         {
@@ -73,7 +73,7 @@ namespace APL_Backend.Controllers
             }
         }
 
-        //[Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher")]
         [HttpPut("{activityId}")]
         public async Task<IActionResult> Update(Guid moduleId, Guid activityId, [FromBody] ActivityDto dto)
         {
@@ -97,7 +97,7 @@ namespace APL_Backend.Controllers
             return Ok(await _activityService.UpdateActivityAsync(dto));
         }
 
-        //[Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher")]
         [HttpDelete("{activityId}")]
         public async Task<IActionResult> Delete(Guid moduleId, Guid activityId) =>
             Ok(await _activityService.DeleteActivityAsync(activityId));
