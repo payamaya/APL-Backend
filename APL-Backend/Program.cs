@@ -44,6 +44,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 // Register services
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IOtpCodeRepository, OtpCodeRepository>();
+
+builder.Services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
@@ -67,6 +72,7 @@ builder.Services.AddScoped<IFileRepository, FileRepository>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 
 // In your API project (e.g., Program.cs or Startup.cs)
@@ -128,6 +134,31 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "APL_Backend", Version = "v1" });
     c.UseInlineDefinitionsForEnums(); // Makes enum values show up clearly
+    // Add JWT bearer authorization
+    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter 'Bearer' followed by a space and your JWT token.\nExample: Bearer abc123..."
+    });
+
+    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 var app = builder.Build();

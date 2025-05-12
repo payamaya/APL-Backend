@@ -1,7 +1,7 @@
-﻿using Application.DTOs;
+﻿using System.Security.Claims;
+using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.Interfaces;
-using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,13 +28,43 @@ namespace APL_Backend.Controllers
             return Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto dto)
         {
-            var userId = await _userService.RegisterAsync(dto);
-            return Ok(new { Message = "User registered successfully", UserId = userId });
+            var userId = await _authService.RegisterWithEmailConfirmationAsync(dto);
+            return Ok(new { Message = "Registration successful; please check your email to confirm.", UserId = userId });
         }
+
+        [AllowAnonymous]
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
+        {
+            var success = await _authService.ConfirmEmailAsync(token);
+            return success
+                ? Ok(new { Message = "Email confirmed. You can now log in." })
+                : BadRequest("Invalid or expired token.");
+        }
+
+        [Authorize]
+        [HttpPost("send-otp")]
+        public async Task<IActionResult> SendOtp()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            await _authService.SendOtpAsync(email!);
+            return Ok("OTP sent to your email.");
+        }
+
+        [Authorize]
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody]OtpVerifyDto dto)
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            var ok = await _authService.VerifyOtpAsync(email!, dto.Code);
+            return ok ? Ok("OTP verified.") : BadRequest("Invalid or expired OTP.");
+        }
+
     }
 
 }

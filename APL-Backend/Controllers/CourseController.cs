@@ -17,7 +17,7 @@ namespace APL_Backend.Controllers
             _courseService = courseService;
         }
 
-        //[Authorize(Roles = "Admin,Teacher,Student")]
+        [Authorize(Roles = "Admin,Teacher,Student")]
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _courseService.GetAllCoursesAsync());
 
@@ -29,7 +29,7 @@ namespace APL_Backend.Controllers
             return result == null ? NotFound() : Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CourseDto dto)
         {
@@ -52,7 +52,7 @@ namespace APL_Backend.Controllers
             return Ok(createdCourse);
         }
 
-        //[Authorize(Roles = "Admin,Teacher")]
+        [Authorize(Roles = "Admin,Teacher")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CourseDto dto)
         {
@@ -77,7 +77,7 @@ namespace APL_Backend.Controllers
             return Ok(await _courseService.UpdateCourseAsync(dto));
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteCourseAsync(id));
 

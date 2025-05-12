@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APL_Backend.Controllers
 {
-    //[Authorize(Roles = "Admin,Teacher,Student")]
+    [Authorize(Roles = "Admin,Teacher,Student")]
     [Route("api/[controller]")]
     [ApiController]
     public class FileController : ControllerBase

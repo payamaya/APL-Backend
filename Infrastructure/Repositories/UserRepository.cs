@@ -16,7 +16,11 @@ namespace Infrastructure.Repositories
 
         public async Task<User?> FindByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email must not be null or empty.", nameof(email));
+
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
         public async Task AddAsync(User user)

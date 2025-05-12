@@ -17,11 +17,11 @@ namespace APL_Backend.Controllers
             _studentService = studentService;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _studentService.GetAllStudentsAsync());
 
-        //[Authorize(Roles = "Admin,Teacher")]
+        [Authorize(Roles = "Admin,Teacher")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -29,7 +29,7 @@ namespace APL_Backend.Controllers
             return result == null ? NotFound() : Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] StudentDto dto)
         {
@@ -38,7 +38,7 @@ namespace APL_Backend.Controllers
             return Ok(createdStudent);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] StudentDto dto)
         {
@@ -47,7 +47,7 @@ namespace APL_Backend.Controllers
             return Ok(updatedStudent);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

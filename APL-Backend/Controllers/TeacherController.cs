@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace APL_Backend.Controllers
 {
     
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class TeacherController : ControllerBase

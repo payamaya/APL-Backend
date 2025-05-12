@@ -16,6 +16,9 @@ namespace Infrastructure.Data
         public DbSet<Teacher> Teachers => Set<Teacher>();
         public DbSet<FileRecord> FileRecords { get; set; }
         public DbSet<Student> Students => Set<Student>();
+        public DbSet<EmailVerification> EmailVerifications => Set<EmailVerification>();
+        public DbSet<OtpCode> OtpCodes => Set<OtpCode>();
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

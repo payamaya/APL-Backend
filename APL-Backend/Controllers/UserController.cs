@@ -17,11 +17,11 @@ namespace APL_Backend.Controllers
             _UserService = UserService;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _UserService.GetAllUsersAsync());
 
-        //[Authorize(Roles = "Admin,Teacher")]
+        [Authorize(Roles = "Admin,Teacher")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -29,7 +29,7 @@ namespace APL_Backend.Controllers
             return result == null ? NotFound() : Ok(result);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] UserDto dto)
         {
@@ -37,7 +37,7 @@ namespace APL_Backend.Controllers
             return Ok("User created successfully."); // Added a success message to indicate the operation was completed
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UserDto dto)
         {
@@ -46,7 +46,7 @@ namespace APL_Backend.Controllers
             return Ok("User updated successfully."); // Added a success message to indicate the operation was completed
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
