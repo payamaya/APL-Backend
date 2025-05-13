@@ -1,11 +1,9 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface IFileRepository
+    public interface IFileRepository : IBaseRepository<FileRecord>
     {
-        Task<FileRecord?> GetByIdAsync(Guid id);
-        Task AddAsync(FileRecord file);
-        Task SaveChangesAsync();
     }
 }

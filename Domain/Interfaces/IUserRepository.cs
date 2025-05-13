@@ -1,14 +1,11 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces;
 
 namespace Infrastructure.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IBaseRepository<User>
     {
-        Task AddAsync(User user);
-        Task<User> GetByIdAsync(Guid id);
-        Task<IEnumerable<User>> GetAllAsync();
         Task<User?> FindByEmailAsync(string email);
-        Task SaveChangesAsync();
         void Delete(User user);
     }
 
