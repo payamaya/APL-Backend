@@ -9,7 +9,6 @@ namespace Domain.Interfaces
 {
     public interface IEmailVerificationRepository : IBaseRepository<EmailVerification>
     {
-        void Delete(EmailVerification email);
         Task<EmailVerification?> GetByTokenAsync(string token);
 
     }

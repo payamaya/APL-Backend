@@ -130,7 +130,7 @@ public class UserService : IUserService
         if (user == null)
             return false;
 
-        _repos.Users.Delete(user);
+        _repos.Users.DeleteAsync(user);
         await _repos.Users.SaveChangesAsync();
         return true;
     }
