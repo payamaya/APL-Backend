@@ -1,0 +1,12 @@
+# APL-Backend/github/CODEOWNERS
+
+# This file specifies who is responsible for code changes
+# Owners must approve PRs that modify files they own
+
+# Payamaya is the owner of the entire repository
+* @payamaya
+
+# You can also specify more granular ownership if needed:
+# /src/ @payamaya
+# /tests/ @payamaya @backup-owner
+# /docs/ @tech-writer-team
