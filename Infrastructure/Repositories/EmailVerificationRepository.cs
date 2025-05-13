@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class EmailVerificationRepository: IEmailVerificationRepository
+    public class EmailVerificationRepository: IBaseRepository<EmailVerification>, IEmailVerificationRepository
     {
         private readonly AppDbContext _context;
         public EmailVerificationRepository(AppDbContext context)
@@ -32,6 +32,26 @@ namespace Infrastructure.Repositories
         public void Delete(EmailVerification email)
         {
             _context.EmailVerifications.Remove(email);
+        }
+
+        public Task<IEnumerable<EmailVerification>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<EmailVerification?> GetByIdAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(EmailVerification entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(EmailVerification entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

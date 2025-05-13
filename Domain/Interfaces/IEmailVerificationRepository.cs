@@ -7,10 +7,8 @@ using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    public interface IEmailVerificationRepository
+    public interface IEmailVerificationRepository : IBaseRepository<EmailVerification>
     {
-        Task AddAsync(EmailVerification email);
-        Task SaveChangesAsync();
         void Delete(EmailVerification email);
         Task<EmailVerification?> GetByTokenAsync(string token);
 

@@ -1,11 +1,12 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : IBaseRepository<User>, IUserRepository
     {
         private readonly AppDbContext _context;
 
@@ -46,6 +47,16 @@ namespace Infrastructure.Repositories
         public void Delete(User user)
         {
             _context.Users.Remove(user);
+        }
+
+        public Task UpdateAsync(User entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(User entity)
+        {
+            throw new NotImplementedException();
         }
     }
 

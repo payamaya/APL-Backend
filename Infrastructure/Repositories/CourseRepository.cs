@@ -2,10 +2,11 @@
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Repositories.Interfaces;
+using Domain.Interfaces;
 
 namespace Infrastructure.Repositories
 {
-    public class CourseRepository : ICourseRepository
+    public class CourseRepository : IBaseRepository<Course>, ICourseRepository
     {
         private readonly AppDbContext _context;
 
@@ -40,6 +41,11 @@ namespace Infrastructure.Repositories
         {
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
+        }
+
+        public Task SaveChangesAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

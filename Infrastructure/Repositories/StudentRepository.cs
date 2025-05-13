@@ -1,11 +1,12 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
-    public class StudentRepository : IStudentRepository
+    public class StudentRepository : IBaseRepository<Student>, IStudentRepository
     {
         private readonly AppDbContext _context;
 

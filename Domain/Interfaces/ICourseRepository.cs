@@ -1,13 +1,10 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces;
 
 namespace Infrastructure.Repositories.Interfaces
 {
-    public interface ICourseRepository
+    public interface ICourseRepository : IBaseRepository<Course>
     {
-        Task<IEnumerable<Course>> GetAllAsync();
-        Task<Course?> GetByIdAsync(Guid id);
-        Task AddAsync(Course course);
-        Task UpdateAsync(Course course);
-        Task DeleteAsync(Course course);
+        
     }
 }
