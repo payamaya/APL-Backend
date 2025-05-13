@@ -51,12 +51,16 @@ namespace Infrastructure.Repositories
 
         public Task UpdateAsync(User entity)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            _context.Users.Update(entity);
+            return _context.SaveChangesAsync();
         }
 
         public Task DeleteAsync(User entity)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            _context.Users.Remove(entity);
+            return _context.SaveChangesAsync();
         }
     }
 

@@ -10,6 +10,7 @@ namespace Infrastructure.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Course> Courses => Set<Course>();
+        public DbSet<UserCourse> UserCourses { get; set; } = null!;
         public DbSet<Module> Modules => Set<Module>();
         public DbSet<Activity> Activities => Set<Activity>();
         public DbSet<User> Users => Set<User>();
@@ -28,6 +29,16 @@ namespace Infrastructure.Data
                 .Entity<User>()
                 .Property(u => u.Role)
                 .HasConversion<string>(); // This stores the enum as a string
+            modelBuilder.Entity<UserCourse>()
+                .HasKey(uc => new { uc.UserId, uc.CourseId });
+            modelBuilder.Entity<UserCourse>()
+                .HasOne(uc => uc.User)
+                .WithMany(u => u.UserCourses)
+                .HasForeignKey(uc => uc.UserId);
+            modelBuilder.Entity<UserCourse>()
+                .HasOne(uc => uc.Course)
+                .WithMany(c => c.UserCourses)
+                .HasForeignKey(uc => uc.CourseId);
 
             modelBuilder
                 .Entity<Teacher>()

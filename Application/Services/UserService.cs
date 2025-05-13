@@ -134,4 +134,31 @@ public class UserService : IUserService
         await _repos.Users.SaveChangesAsync();
         return true;
     }
+
+    // ← added: enroll a user in a course
+    public async Task AssignUserToCourseAsync(AssignUserToCourseDto dto)
+    {
+        var exists = await _context.UserCourses.FindAsync(dto.UserId, dto.CourseId);
+        if (exists != null)
+            throw new InvalidOperationException("User already enrolled in this course.");
+
+        var uc = new UserCourse
+        {
+            UserId = dto.UserId,
+            CourseId = dto.CourseId
+        };
+        _context.UserCourses.Add(uc);
+        await _context.SaveChangesAsync();
+    }
+
+    // ← added: remove a user from a course
+    public async Task RemoveUserFromCourseAsync(AssignUserToCourseDto dto)
+    {
+        var uc = await _context.UserCourses.FindAsync(dto.UserId, dto.CourseId);
+        if (uc == null)
+            throw new InvalidOperationException("User is not enrolled in this course.");
+
+        _context.UserCourses.Remove(uc);
+        await _context.SaveChangesAsync();
+    }
 }
