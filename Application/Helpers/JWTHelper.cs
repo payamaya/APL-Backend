@@ -18,7 +18,7 @@ public static class JwtHelper
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.UtcNow.AddMinutes(double.Parse(config["JWT:ExpiresInMinutes"]!));
+        var expires = DateTime.UtcNow.AddHours(24);
 
         var token = new JwtSecurityToken(
             issuer: config["JWT:Issuer"],

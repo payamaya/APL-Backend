@@ -40,7 +40,7 @@ namespace APL_Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] TeacherDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID mismatch");
+            if (id != dto.UserId) return BadRequest("ID mismatch");
 
             // Get the current time in Central European Time (CET)
             TimeZoneInfo cetZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");

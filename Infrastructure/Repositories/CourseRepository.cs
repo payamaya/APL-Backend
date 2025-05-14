@@ -1,51 +1,13 @@
 ﻿using Domain.Entities;
 using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.Repositories.Interfaces;
-using Domain.Interfaces;
 
 namespace Infrastructure.Repositories
 {
-    public class CourseRepository : IBaseRepository<Course>, ICourseRepository
+    public class CourseRepository : BaseRepository<Course>, ICourseRepository
     {
-        private readonly AppDbContext _context;
-
-        public CourseRepository(AppDbContext context)
+        public CourseRepository(AppDbContext context) : base(context)
         {
-            _context = context;
-        }
-
-        public async Task<IEnumerable<Course>> GetAllAsync()
-        {
-            return await _context.Courses.ToListAsync();
-        }
-
-        public async Task<Course?> GetByIdAsync(Guid id)
-        {
-            return await _context.Courses.FindAsync(id);
-        }
-
-        public async Task AddAsync(Course course)
-        {
-            await _context.Courses.AddAsync(course);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Course course)
-        {
-            _context.Courses.Update(course);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(Course course)
-        {
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync();
-        }
-
-        public Task SaveChangesAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 }

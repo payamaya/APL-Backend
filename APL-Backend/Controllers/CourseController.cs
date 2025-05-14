@@ -11,10 +11,12 @@ namespace APL_Backend.Controllers
     {
         private const int PAST_DATE_TOLERANCE_SECONDS = -30;
         private readonly ICourseService _courseService;
+        private readonly IUserService _userService;
 
-        public CourseController(ICourseService courseService)
+        public CourseController(ICourseService courseService, IUserService userService)
         {
             _courseService = courseService;
+            _userService = userService;
         }
 
         [Authorize(Roles = "Admin,Teacher,Student")]
@@ -81,5 +83,55 @@ namespace APL_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteCourseAsync(id));
 
+        // ← START: enrollment endpoints
+        [Authorize(Roles = "Admin")]
+        [HttpPost("{courseId}/students/{studentId}")]
+        public async Task<IActionResult> EnrollStudent(Guid courseId, Guid studentId)
+        {
+            await _userService.AssignUserToCourseAsync(new AssignUserToCourseDto   // ← added
+            {
+                UserId = studentId,
+                CourseId = courseId
+            });
+            return Ok("Student enrolled successfully.");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{courseId}/students/{studentId}")]
+        public async Task<IActionResult> UnenrollStudent(Guid courseId, Guid studentId)
+        {
+            await _userService.RemoveUserFromCourseAsync(new AssignUserToCourseDto  // ← added
+            {
+                UserId = studentId,
+                CourseId = courseId
+            });
+            return Ok("Student unenrolled successfully.");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("{courseId}/teachers/{teacherId}")]
+        public async Task<IActionResult> EnrollTeacher(Guid courseId, Guid teacherId)
+        {
+            await _userService.AssignUserToCourseAsync(new AssignUserToCourseDto   // ← added
+            {
+                UserId = teacherId,
+                CourseId = courseId
+            });
+            return Ok("Teacher enrolled successfully.");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{courseId}/teachers/{teacherId}")]
+        public async Task<IActionResult> UnenrollTeacher(Guid courseId, Guid teacherId)
+        {
+            await _userService.RemoveUserFromCourseAsync(new AssignUserToCourseDto  // ← added
+            {
+                UserId = teacherId,
+                CourseId = courseId
+            });
+            return Ok("Teacher unenrolled successfully.");
+        }
+        // ← END: enrollment endpoints
     }
+
 }

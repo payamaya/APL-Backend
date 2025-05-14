@@ -6,7 +6,6 @@ using Domain.Enums;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace Application.Services
@@ -86,7 +85,7 @@ namespace Application.Services
 
         public async Task<TeacherDto> UpdateTeacherAsync(TeacherDto dto)
         {
-            var teacher = await _repository.GetByIdAsync(dto.Id);
+            var teacher = await _repository.GetByIdAsync(dto.UserId);
             if (teacher == null) throw new Exception("Teacher not found");
 
             _mapper.Map(dto, teacher);
