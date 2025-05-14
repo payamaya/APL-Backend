@@ -58,6 +58,12 @@ public class AppDbContext : DbContext
                 .HasOne(t => t.User)
                 .WithOne()
                 .HasForeignKey<Student>(t => t.UserId); // Removed .HasConversion<string>() as it is not valid here
+
+            modelBuilder.Entity<Teacher>()
+                .Property(t => t.TeacherType)
+                .HasConversion<string>();
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

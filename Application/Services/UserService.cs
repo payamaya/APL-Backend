@@ -22,56 +22,6 @@ public class UserService : IUserService
         _mapper = mapper;
     }
 
-    public async Task<Guid> RegisterAsync(UserDto dto)
-    {
-        var existing = await _repos.Users.FindByEmailAsync(dto.Email);
-        if (existing != null)
-            throw new ConflictException("Email already in use.");
-
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            var user = new User
-            {
-                Email = dto.Email,
-                Password = PasswordHasher.Hash(dto.Password),
-                Role = dto.Role,
-                EmailConfirmed = false,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await _repos.Users.AddAsync(user);
-            await _repos.Users.SaveChangesAsync();
-
-            switch (dto.Role)
-            {
-                case Role.Student:
-                    await _repos.Students.AddAsync(new Student { UserId = user.Id, Email = user.Email });
-                    break;
-                case Role.Teacher:
-                    await _repos.Teachers.AddAsync(new Teacher { UserId = user.Id, Email = user.Email });
-                    break;
-                case Role.Admin:
-                    var userA = new User
-                    {
-                        Id = user.Id,
-                        Email = user.Email,
-                        // Other teacher-specific fields if needed
-                    };
-                    await _repos.Users.AddAsync(userA);
-                    break;
-            }
-
-            await transaction.CommitAsync();
-            return user.Id;
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-
     public async Task<UserDto> CreateUserAsync(UserDto dto)
     {
         // Update the method call to specify the correct interface or namespace to resolve ambiguity

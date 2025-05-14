@@ -6,7 +6,6 @@ using Domain.Enums;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace Application.Services
