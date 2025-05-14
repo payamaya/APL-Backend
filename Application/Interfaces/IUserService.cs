@@ -11,6 +11,8 @@ namespace Application.Interfaces
         Task<UserDto> CreateUserAsync(UserDto dto);
         Task<UserDto> UpdateUserAsync(UserDto dto);
         Task<bool> DeleteUserAsync(Guid id);
+        Task AssignUserToCourseAsync(AssignUserToCourseDto dto);
+        Task RemoveUserFromCourseAsync(AssignUserToCourseDto dto);
     }
 
 }

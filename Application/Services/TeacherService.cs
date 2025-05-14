@@ -86,7 +86,7 @@ namespace Application.Services
 
         public async Task<TeacherDto> UpdateTeacherAsync(TeacherDto dto)
         {
-            var teacher = await _repository.GetByIdAsync(dto.Id);
+            var teacher = await _repository.GetByIdAsync(dto.UserId);
             if (teacher == null) throw new Exception("Teacher not found");
 
             _mapper.Map(dto, teacher);

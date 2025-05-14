@@ -73,6 +73,8 @@ builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
+builder.Services.AddScoped<IUserCourseRepository, UserCourseRepository>();
+
 
 
 // In your API project (e.g., Program.cs or Startup.cs)

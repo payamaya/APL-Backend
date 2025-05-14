@@ -15,6 +15,8 @@ namespace Domain.Entities
         public Role Role { get; set; } // "Admin", "Teacher", "Student"
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsOtpVerified { get; set; }
+        // ← added: navigation for enrollments
+        public ICollection<UserCourse> UserCourses { get; set; } = new List<UserCourse>();
     }
 
 }

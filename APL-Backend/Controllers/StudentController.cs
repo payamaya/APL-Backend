@@ -42,7 +42,7 @@ namespace APL_Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] StudentDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID mismatch");
+            if (id != dto.UserId) return BadRequest("ID mismatch");
             var updatedStudent = await _studentService.UpdateStudentAsync(dto);
             return Ok(updatedStudent);
         }
