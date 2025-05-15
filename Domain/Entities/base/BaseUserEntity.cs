@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace   Domain.Entities.Base
 {
-    public class BaseUserEntity
+    public class BaseUserEntity: BaseEntity
     {
         [Key]
         public Guid UserId { get; set; }

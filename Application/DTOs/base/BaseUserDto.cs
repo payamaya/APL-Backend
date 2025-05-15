@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Base
 {
-    public class BaseUserDto
+    public class BaseUserDto: BaseDto
     {
         public Guid UserId { get; set; }
         [EmailAddress]

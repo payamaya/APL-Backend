@@ -35,7 +35,7 @@ namespace APL_Backend.Controllers
             try
             {
                 dto.CourseId = courseId; // Ensure association
-                var createdModule = await _moduleService.CreateModuleAsync(dto);
+                var createdModule = await _moduleService.CreateAsync(dto);
                 return CreatedAtAction(
                     nameof(Get),
                     new { courseId, moduleId = createdModule.Id },
@@ -53,12 +53,12 @@ namespace APL_Backend.Controllers
         {
             if (moduleId != dto.Id) return BadRequest("ID mismatch");
             dto.CourseId = courseId; // Ensure course association remains
-            return Ok(await _moduleService.UpdateModuleAsync(dto));
+            return Ok(await _moduleService.UpdateAsync(dto));
         }
 
         [HttpDelete("{moduleId}")]
         public async Task<IActionResult> Delete(Guid courseId, Guid moduleId) =>
-            Ok(await _moduleService.DeleteModuleAsync(moduleId));
+            Ok(await _moduleService.DeleteAsync(moduleId));
     }
 
  

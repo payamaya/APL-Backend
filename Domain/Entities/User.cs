@@ -1,7 +1,8 @@
-﻿using Domain.Enums;
+﻿using Domain.Entities.Base;
+using Domain.Enums;
 
 
-namespace Domain.Entities.Base
+namespace Domain.Entities
 {
     public class User: BaseUserEntity
     {
