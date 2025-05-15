@@ -1,0 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Application.DTOs.Base
+{
+    public class BaseUserDto
+    {
+        public Guid UserId { get; set; }
+        [EmailAddress]
+        [MaxLength(20)]
+        public string Email { get; set; } = string.Empty;
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
+
+    }
+}

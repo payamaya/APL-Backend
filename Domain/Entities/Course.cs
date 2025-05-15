@@ -1,21 +1,13 @@
 ﻿
 
+using Domain.Entities.Base;
+
 namespace Domain.Entities
 {
-    public class Course
+    public class Course: BaseTimeEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public string Name { get; set; } = string.Empty;
-        public string Title { get; set; } = string.Empty; 
-        public string Description { get; set; } = string.Empty;
         public ICollection<Module> Modules { get; set; } = new List<Module>();
         public ICollection<UserCourse> UserCourses { get; set; } = new List<UserCourse>();
-
-        public DateTime? EndDate { get; set; } // Nullable to allow for no due date
-
-        public DateTime? StartDate { get; set; } = DateTime.UtcNow;
-
-
 
     }
 }

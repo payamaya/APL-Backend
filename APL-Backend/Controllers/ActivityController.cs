@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.DTOs.Base;
 using Application.Interfaces;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;

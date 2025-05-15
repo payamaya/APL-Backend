@@ -1,9 +1,11 @@
 ﻿using Application.DTOs;
+using Application.DTOs.Base;
 using Application.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Base;
 using Domain.Enums;
 using Domain.Interfaces;
    
@@ -30,7 +32,7 @@ public class UserService : IUserService
             throw new ConflictException("Email already in use.");
 
         var user = _mapper.Map<User>(dto);
-        user.Id = Guid.NewGuid();
+        user.UserId = Guid.NewGuid();
         user.Password = PasswordHasher.Hash(dto.Password); // Assuming dto.Password is provided
         user.CreatedAt = DateTime.UtcNow;
 
@@ -58,7 +60,7 @@ public class UserService : IUserService
 
     public async Task<UserDto> UpdateUserAsync(UserDto dto)
     {
-        var user = await _repos.Users.GetByIdAsync(dto.Id);
+        var user = await _repos.Users.GetByIdAsync(dto.UserId);
         if (user == null)
             throw new Exception("User not found.");
 

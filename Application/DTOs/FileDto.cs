@@ -6,9 +6,9 @@ namespace Application.DTOs
     public class FileDto
     {
         [Required]
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
         public Guid Id { get; set; }
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
         public Guid ActivityId { get; set; } // Example FK
     }
 }

@@ -1,24 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.DTOs
+namespace Application.DTOs.Base
 {
-    public class StudentDto
-    {
-        public Guid UserId { get; set; }
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-
-        [EmailAddress]
-        [MaxLength(20)]
-        public string Email { get; set; } = string.Empty;
-
-        [Phone]
-        [MaxLength(20)]
-        public string Telephone { get; set; } = string.Empty;
-        public string? Address { get; set; } = string.Empty;
-        //public ICollection<CourseDto> Courses { get; set; } = new List<CourseDto>();
-        
-        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
-
+    public class StudentDto: BasePersonDto
+    {        
     }
 }

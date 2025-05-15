@@ -1,5 +1,6 @@
 ﻿
 using Domain.Entities;
+using Domain.Entities.Base;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;

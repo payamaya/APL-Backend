@@ -1,7 +1,9 @@
 ﻿using Application.DTOs;
+using Application.DTOs.Base;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Base;
 using Domain.Enums;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;
@@ -45,7 +47,7 @@ namespace Application.Services
 
                 // Step 2: Create the Teacher
                 var teacher = _mapper.Map<Teacher>(dto);
-                teacher.UserId = createdUser.Id;
+                teacher.UserId = createdUser.UserId;
                 teacher.Email = createdUser.Email;
 
                 await _repository.AddAsync(teacher);

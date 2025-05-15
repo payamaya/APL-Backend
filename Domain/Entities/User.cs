@@ -1,19 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Domain.Enums;
+﻿using Domain.Enums;
 
 
-namespace Domain.Entities
+namespace Domain.Entities.Base
 {
-    public class User
+    public class User: BaseUserEntity
     {
-        public Guid Id { get; set; }
-
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public bool EmailConfirmed { get; set; }
         public Role Role { get; set; } // "Admin", "Teacher", "Student"
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsOtpVerified { get; set; }
         // ← added: navigation for enrollments
         public ICollection<UserCourse> UserCourses { get; set; } = new List<UserCourse>();

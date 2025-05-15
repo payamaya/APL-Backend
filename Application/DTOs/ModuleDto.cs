@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.DTOs
+﻿
+namespace Application.DTOs.Base
 {
-    public class ModuleDto
+    public class ModuleDto: BaseDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-
-        public string Title { get; set; } = string.Empty; // ⛔ Remove `internal set`
-        public string Description { get; set; } = string.Empty; // ⛔ Remove `internal set`
         public Guid CourseId { get; set; } // Required foreign key
-
 
     }
 
