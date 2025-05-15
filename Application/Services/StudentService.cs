@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Base;
 using Domain.Enums;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;

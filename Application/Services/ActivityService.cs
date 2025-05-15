@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Base;
 using Infrastructure.Repositories.Interfaces;
 
 

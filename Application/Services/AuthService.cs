@@ -4,6 +4,7 @@ using Application.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Entities.Base;
 using Domain.Enums;
 using Domain.Interfaces;
 using Infrastructure.Data;
@@ -99,7 +100,7 @@ namespace Application.Services
                 // 2. Create user with EmailConfirmed = false
                 var user = new User
                 {
-                    Id = Guid.NewGuid(),
+                    UserId = Guid.NewGuid(),
                     Email = dto.Email,
                     Password = PasswordHasher.Hash(dto.Password),
                     Role = dto.Role,
@@ -112,10 +113,10 @@ namespace Application.Services
                 switch (dto.Role)
                 {
                     case Role.Student:
-                        await _repos.Students.AddAsync(new Student { UserId = user.Id, Email = user.Email });
+                        await _repos.Students.AddAsync(new Student { UserId = user.UserId, Email = user.Email });
                         break;
                     case Role.Teacher:
-                        await _repos.Teachers.AddAsync(new Teacher { UserId = user.Id, Email = user.Email });
+                        await _repos.Teachers.AddAsync(new Teacher { UserId = user.UserId, Email = user.Email });
                         break;
                 }
 
@@ -126,7 +127,7 @@ namespace Application.Services
                 var email = new EmailVerification
                 {
                     Id = Guid.NewGuid(),
-                    UserId = user.Id,
+                    UserId = user.UserId,
                     Token = token,
                     ExpiresAt = DateTime.UtcNow.AddHours(24)
                 };
@@ -143,7 +144,7 @@ namespace Application.Services
 
                 await _emailService.SendEmailAsync(dto.Email, subject, body);
                 await transaction.CommitAsync();
-                return user.Id;
+                return user.UserId;
             }
             catch
             {
@@ -168,7 +169,7 @@ namespace Application.Services
             // 3. Store in OtpCodes table
             var otp = new OtpCode
             {
-                UserId = user.Id,
+                UserId = user.UserId,
                 Email = user.Email,
                 Code = hashedOtp,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(10),

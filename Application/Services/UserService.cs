@@ -4,6 +4,7 @@ using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Entities.Base;
 using Domain.Enums;
 using Domain.Interfaces;
    
@@ -30,7 +31,7 @@ public class UserService : IUserService
             throw new ConflictException("Email already in use.");
 
         var user = _mapper.Map<User>(dto);
-        user.Id = Guid.NewGuid();
+        user.UserId = Guid.NewGuid();
         user.Password = PasswordHasher.Hash(dto.Password); // Assuming dto.Password is provided
         user.CreatedAt = DateTime.UtcNow;
 

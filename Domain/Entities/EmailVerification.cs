@@ -1,16 +1,8 @@
 ﻿
-using System.ComponentModel.DataAnnotations;
-
-namespace Domain.Entities
+namespace Domain.Entities.Base
 {
-    public class EmailVerification
+    public class EmailVerification: BaseVerificationEntity
     {
-        public Guid Id { get; set; }
-        public Guid UserId { get; set; }
-
         public string Token { get; set; } = null!;      // GUID or secure random string
-        public DateTime ExpiresAt { get; set; }
-        public bool IsUsed { get; set; }
-
     }
 }
