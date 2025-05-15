@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.DTOs.Base;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace APL_Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UserDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID mismatch");
+            if (id != dto.UserId) return BadRequest("ID mismatch");
             await _UserService.UpdateUserAsync(dto); // Fix: Removed assignment to a variable since UpdateUserAsync returns void
             return Ok("User updated successfully."); // Added a success message to indicate the operation was completed
         }

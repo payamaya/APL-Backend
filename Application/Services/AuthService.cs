@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Auth;
+using Application.DTOs.Base;
 using Application.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;

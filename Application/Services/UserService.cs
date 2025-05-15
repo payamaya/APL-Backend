@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.DTOs.Base;
 using Application.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
@@ -59,7 +60,7 @@ public class UserService : IUserService
 
     public async Task<UserDto> UpdateUserAsync(UserDto dto)
     {
-        var user = await _repos.Users.GetByIdAsync(dto.Id);
+        var user = await _repos.Users.GetByIdAsync(dto.UserId);
         if (user == null)
             throw new Exception("User not found.");
 

@@ -3,6 +3,7 @@ using Domain.Entities;
 using Application.DTOs;
 using Infrastructure.Repositories.Interfaces;
 using Application.Interfaces;
+using Application.DTOs.Base;
 
 namespace Application.Services
 {
