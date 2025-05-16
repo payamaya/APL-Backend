@@ -22,13 +22,13 @@ namespace APL_Backend.Controllers
 
         [Authorize(Roles = "Admin,Teacher,Student")]
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _courseService.GetAllCoursesAsync());
+        public async Task<IActionResult> GetAll() => Ok(await _courseService.GetAllAsync());
 
         //[Authorize(Roles = "Admin,Teacher,Student")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var result = await _courseService.GetCourseByIdAsync(id);
+            var result = await _courseService.GetByIdAsync(id);
             return result == null ? NotFound() : Ok(result);
         }
 
@@ -51,7 +51,7 @@ namespace APL_Backend.Controllers
             }
 
             // If validation passes, create the course
-            var createdCourse = await _courseService.CreateCourseAsync(dto);
+            var createdCourse = await _courseService.CreateAsync(dto);
             return Ok(createdCourse);
         }
 
@@ -77,12 +77,12 @@ namespace APL_Backend.Controllers
                 return BadRequest("End date must be after start date.");
             }
 
-            return Ok(await _courseService.UpdateCourseAsync(dto));
+            return Ok(await _courseService.UpdateAsync(dto));
         }
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteCourseAsync(id));
+        public async Task<IActionResult> Delete(Guid id) => Ok(await _courseService.DeleteAsync(id));
 
         // ← START: enrollment endpoints
         [Authorize(Roles = "Admin")]

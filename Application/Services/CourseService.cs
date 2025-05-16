@@ -73,7 +73,5 @@ namespace Application.Services
             : base(repository, mapper)
         {
         }
-
-        // You can still add course-specific logic here if needed
     }
 }

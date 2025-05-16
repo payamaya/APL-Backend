@@ -4,8 +4,8 @@ namespace   Domain.Entities.Base
 {
     public class BaseUserEntity: BaseEntity
     {
-        [Key]
-        public Guid UserId { get; set; }
+        //[Key]
+        //public Guid UserId { get; set; }
 
         [EmailAddress]
         public string Email { get; set; } = string.Empty;

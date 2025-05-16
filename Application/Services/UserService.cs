@@ -117,6 +117,8 @@
 
 using Application.DTOs;
 using Application.DTOs.Base;
+using Application.Exceptions;
+using Application.Helpers;
 using Application.Interfaces;
 using Application.Services.Base;
 using AutoMapper;
@@ -129,12 +131,30 @@ namespace Application.Services
     public class UserService : CrudService<User, UserDto>, IUserService
     {
         private readonly AppDbContext _context;
+        private readonly IUserRepository _repository;
         public UserService(IUserRepository repository, AppDbContext context, IMapper mapper)
             : base(repository, mapper)
         {
             _context = context;
+            _repository = repository;
         }
-        
+        public async Task<UserDto> CreateUserAsync(UserDto dto)
+        {
+            // Update the method call to specify the correct interface or namespace to resolve ambiguity
+            var existing = await _repository.FindByEmailAsync(dto.Email);
+            if (existing != null)
+                throw new ConflictException("Email already in use.");
+
+            var user = _mapper.Map<User>(dto);
+            user.Id = Guid.NewGuid();
+            user.Password = PasswordHasher.Hash(dto.Password); // Assuming dto.Password is provided
+            user.CreatedAt = DateTime.UtcNow;
+
+            await _repository.AddAsync(user);
+            await _repository.SaveChangesAsync();
+
+            return _mapper.Map<UserDto>(user);
+        }
         public async Task AssignUserToCourseAsync(AssignUserToCourseDto dto)
         {
             var exists = await _context.UserCourses.FindAsync(dto.UserId, dto.CourseId);

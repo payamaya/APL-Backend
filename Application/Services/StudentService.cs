@@ -100,17 +100,54 @@ using Application.Services.Base;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.Base;
+using Domain.Enums;
+using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;
 
 namespace Application.Services
 {
     public class StudentService : CrudService<Student, StudentDto>, IStudentService
     {
+        private readonly AppDbContext _dbContext;
+        private readonly IUserService _userService;
         public StudentService(IStudentRepository repository, IMapper mapper)
             : base(repository, mapper)
         {
         }
 
-        // You can still add Student-specific logic here if needed
+        public async Task<StudentDto> CreateStudentAsync(StudentDto dto)
+        {
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Step 1: Create the User
+                var userDto = new UserDto
+                {
+                    Email = dto.Email,
+                    Password = "string",
+                    Role = Role.Student
+                };
+
+                var createdUser = await _userService.CreateUserAsync(userDto);
+
+                // Step 2: Create the Teacher
+                var student = _mapper.Map<Student>(dto);
+                student.Id = createdUser.Id;
+                student.Email = createdUser.Email;
+
+                await _repository.AddAsync(student);
+                await _repository.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return _mapper.Map<StudentDto>(student);
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw; // Let the exception propagate
+            }
+        }
     }
 }

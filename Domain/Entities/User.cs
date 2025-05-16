@@ -4,7 +4,7 @@ using Domain.Enums;
 
 namespace Domain.Entities
 {
-    public class User: BaseUserEntity
+    public class User: BasePersonEntity
     {
         public string Password { get; set; } = string.Empty;
         public bool EmailConfirmed { get; set; }

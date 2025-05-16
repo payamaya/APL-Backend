@@ -45,7 +45,7 @@ namespace Application.Services
                 throw new InvalidOperationException("Token has expired.");
 
             // 2. Confirm user's email
-            var user = await _repos.Users.GetByIdAsync(verification.UserId);
+            var user = await _repos.Users.GetByIdAsync(verification.Id);
             if (user == null)
                 throw new Exception("User not found.");
 
@@ -101,7 +101,11 @@ namespace Application.Services
                 // 2. Create user with EmailConfirmed = false
                 var user = new User
                 {
-                    UserId = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                    Telephone = dto.Telephone,
+                    Address = dto.Address,
                     Email = dto.Email,
                     Password = PasswordHasher.Hash(dto.Password),
                     Role = dto.Role,
@@ -114,10 +118,26 @@ namespace Application.Services
                 switch (dto.Role)
                 {
                     case Role.Student:
-                        await _repos.Students.AddAsync(new Student { UserId = user.UserId, Email = user.Email });
+                        await _repos.Students.AddAsync(new Student { 
+                            Id = user.Id, 
+                            Email = user.Email,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Telephone = user.Telephone,
+                            Address = user.Address,
+                            CreatedAt = user.CreatedAt
+                        });
                         break;
                     case Role.Teacher:
-                        await _repos.Teachers.AddAsync(new Teacher { UserId = user.UserId, Email = user.Email });
+                        await _repos.Teachers.AddAsync(new Teacher { 
+                            Id = user.Id, 
+                            Email = user.Email,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Telephone = user.Telephone,
+                            Address = user.Address,
+                            CreatedAt = user.CreatedAt
+                        });
                         break;
                 }
 
@@ -128,7 +148,7 @@ namespace Application.Services
                 var email = new EmailVerification
                 {
                     Id = Guid.NewGuid(),
-                    UserId = user.UserId,
+                    UserId = user.Id,
                     Token = token,
                     ExpiresAt = DateTime.UtcNow.AddHours(24)
                 };
@@ -145,7 +165,7 @@ namespace Application.Services
 
                 await _emailService.SendEmailAsync(dto.Email, subject, body);
                 await transaction.CommitAsync();
-                return user.UserId;
+                return user.Id;
             }
             catch
             {
@@ -170,7 +190,7 @@ namespace Application.Services
             // 3. Store in OtpCodes table
             var otp = new OtpCode
             {
-                UserId = user.UserId,
+                Id = user.Id,
                 Email = user.Email,
                 Code = hashedOtp,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(10),

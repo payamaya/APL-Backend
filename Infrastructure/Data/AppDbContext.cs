@@ -57,18 +57,18 @@ public class AppDbContext : DbContext
                 .HasConversion<string>();
 
             modelBuilder.Entity<Teacher>()
-                .HasKey(t => t.UserId);
+                .HasKey(t => t.Id);
             modelBuilder.Entity<Teacher>()
                 .HasOne(t => t.User)
                 .WithOne()
-                .HasForeignKey<Teacher>(t => t.UserId); // Removed .HasConversion<string>() as it is not valid here
+                .HasForeignKey<Teacher>(t => t.Id); // Removed .HasConversion<string>() as it is not valid here
 
             modelBuilder.Entity<Student>()
-                .HasKey(t => t.UserId);
+                .HasKey(t => t.Id);
             modelBuilder.Entity<Student>()
                 .HasOne(t => t.User)
                 .WithOne()
-                .HasForeignKey<Student>(t => t.UserId); // Removed .HasConversion<string>() as it is not valid here
+                .HasForeignKey<Student>(t => t.Id); // Removed .HasConversion<string>() as it is not valid here
 
             modelBuilder.Entity<Teacher>()
                 .Property(t => t.TeacherType)
