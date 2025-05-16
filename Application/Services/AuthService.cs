@@ -45,7 +45,7 @@ namespace Application.Services
                 throw new InvalidOperationException("Token has expired.");
 
             // 2. Confirm user's email
-            var user = await _repos.Users.GetByIdAsync(verification.Id);
+            var user = await _repos.Users.GetByIdAsync(verification.UserId);
             if (user == null)
                 throw new Exception("User not found.");
 
@@ -157,7 +157,7 @@ namespace Application.Services
                 await _repos.Users.SaveChangesAsync();
 
                 // 4. Build confirmation URL
-                var confirmUrl = $"{"http://localhost:3000"}/confirm?token={token}";
+                var confirmUrl = $"{"http://localhost:3000"}/auth/confirm-email?token={token}";
 
                 // 5. Send confirmation email
                 var subject = "Confirm your account";
