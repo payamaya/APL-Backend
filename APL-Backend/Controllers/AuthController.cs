@@ -1,10 +1,11 @@
-﻿using System.Security.Claims;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.DTOs.Base;
 using Application.Interfaces;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace APL_Backend.Controllers
 {
@@ -62,7 +63,12 @@ namespace APL_Backend.Controllers
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
             var ok = await _authService.VerifyOtpAsync(email!, dto.Code);
-            return ok ? Ok("OTP verified.") : BadRequest("Invalid or expired OTP.");
+            return Ok(new
+            {
+                success = true,
+                message = "OTP verified successfully",
+            });
+
         }
 
     }
