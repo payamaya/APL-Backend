@@ -57,3 +57,21 @@ namespace Application.Services
         }
     }
 }
+
+//using Application.DTOs;
+//using Application.Interfaces;
+//using Application.Services.Base;
+//using AutoMapper;
+//using Domain.Entities;
+//using Infrastructure.Repositories.Interfaces;
+
+//namespace Application.Services
+//{
+//    public class CourseService : CrudService<Course, CourseDto>, ICourseService
+//    {
+//        public CourseService(ICourseRepository repository, IMapper mapper)
+//            : base(repository, mapper)
+//        {
+//        }
+//    }
+//}

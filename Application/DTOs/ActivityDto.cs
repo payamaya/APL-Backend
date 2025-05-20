@@ -1,7 +1,8 @@
 ﻿
+using Application.DTOs.Base;
 using Domain.Enums;
 
-namespace Application.DTOs.Base
+namespace Application.DTOs
 {
     public class ActivityDto: BaseTimeDto
     {

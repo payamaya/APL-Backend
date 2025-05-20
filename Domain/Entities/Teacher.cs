@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Domain.Enums;
+﻿using Domain.Enums;
+using Domain.Entities.Base;
 
-namespace Domain.Entities.Base
+namespace Domain.Entities
 {
     public class Teacher: BasePersonEntity
     {

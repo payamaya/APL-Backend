@@ -65,3 +65,33 @@ namespace Application.Services
         }
     }
 }
+
+//using Application.DTOs;
+//using Application.Interfaces;
+//using Application.Services.Base;
+//using AutoMapper;
+//using Domain.Entities;
+//using Infrastructure.Repositories.Interfaces;
+
+//namespace Application.Services
+//{
+//    public class ActivityService : CrudService<Activity, ActivityDto>, IActivityService
+//    {
+//        public ActivityService(IActivityRepository repository, IMapper mapper)
+//            : base(repository, mapper)
+//        {
+//        }
+//        public async Task<IEnumerable<ActivityDto>> GetAllActivitiesAsync(Guid moduleId)
+//        {
+//            var activities = await _repository.GetAllAsync();
+//            return _mapper.Map<IEnumerable<ActivityDto>>(activities);
+//        }
+
+//        public async Task<ActivityDto?> GetActivityByIdAsync(Guid moduleId, Guid activityId)
+//        {
+//            var activity = await _repository.GetByIdAsync(activityId);
+//            return activity == null ? null : _mapper.Map<ActivityDto>(activity);
+//        }
+//    }
+//}
+

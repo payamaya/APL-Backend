@@ -1,5 +1,5 @@
 ﻿using Application.DTOs;
-using Application.DTOs.Base;
+using Application.Interfaces;
 
 namespace Application.Interfaces
 {

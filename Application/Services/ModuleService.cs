@@ -79,3 +79,32 @@ namespace Application.Services
         }
     }
 }
+
+//using Application.DTOs;
+//using Application.Interfaces;
+//using Application.Services.Base;
+//using AutoMapper;
+//using Domain.Entities;
+//using Infrastructure.Repositories.Interfaces;
+
+//namespace Application.Services
+//{
+//    public class ModuleService : CrudService<Module, ModuleDto>, IModuleService
+//    {
+//        public ModuleService(IModuleRepository repository, IMapper mapper)
+//            : base(repository, mapper)
+//        {
+//        }
+//        public async Task<IEnumerable<ModuleDto>> GetAllModulesAsync(Guid courseId)
+//        {
+//            var modules = await _repository.GetAllAsync();
+//            return _mapper.Map<IEnumerable<ModuleDto>>(modules);
+//        }
+
+//        public async Task<ModuleDto?> GetModuleByIdAsync(Guid courseId, Guid moduleId)
+//        {
+//            var module = await _repository.GetByIdAsync(moduleId);
+//            return module == null ? null : _mapper.Map<ModuleDto>(module);
+//        }
+//    }
+//}
