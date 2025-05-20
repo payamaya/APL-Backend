@@ -20,13 +20,13 @@ namespace APL_Backend.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _studentService.GetAllAsync());
+        public async Task<IActionResult> GetAll() => Ok(await _studentService.GetAllStudentsAsync());
 
         [Authorize(Roles = "Admin,Teacher")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var result = await _studentService.GetByIdAsync(id);
+            var result = await _studentService.GetStudentByIdAsync(id);
             return result == null ? NotFound() : Ok(result);
         }
 
@@ -35,7 +35,7 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Create([FromBody] StudentDto dto)
         {
             // Validate the StartDate
-            var createdStudent = await _studentService.CreateAsync(dto);
+            var createdStudent = await _studentService.CreateStudentAsync(dto);
             return Ok(createdStudent);
         }
 
@@ -44,7 +44,7 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Update(Guid id, [FromBody] StudentDto dto)
         {
             if (id != dto.Id) return BadRequest("ID mismatch");
-            var updatedStudent = await _studentService.UpdateAsync(dto);
+            var updatedStudent = await _studentService.UpdateStudentAsync(dto);
             return Ok(updatedStudent);
         }
 
@@ -52,7 +52,7 @@ namespace APL_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _studentService.DeleteAsync(id);
+            var result = await _studentService.DeleteStudentAsync(id);
             return result ? Ok() : NotFound();
         }
 

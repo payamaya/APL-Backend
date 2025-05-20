@@ -20,12 +20,12 @@ namespace APL_Backend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _TeacherService.GetAllAsync());
+        public async Task<IActionResult> GetAll() => Ok(await _TeacherService.GetAllTeachersAsync());
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var result = await _TeacherService.GetByIdAsync(id);
+            var result = await _TeacherService.GetTeacherByIdAsync(id);
             return result == null ? NotFound() : Ok(result);
         }
 
@@ -47,10 +47,10 @@ namespace APL_Backend.Controllers
             TimeZoneInfo cetZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
             DateTime currentCET = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cetZone);
 
-            return Ok(await _TeacherService.UpdateAsync(dto));
+            return Ok(await _TeacherService.UpdateTeacherAsync(dto));
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id) => Ok(await _TeacherService.DeleteAsync(id));
+        public async Task<IActionResult> Delete(Guid id) => Ok(await _TeacherService.DeleteTeacherAsync(id));
     }
 }

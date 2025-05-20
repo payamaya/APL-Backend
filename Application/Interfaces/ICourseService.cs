@@ -1,15 +1,15 @@
-﻿using Application.DTOs.Base;
-using Application.Interfaces.Base;
+﻿using Application.DTOs;
+using Application.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface ICourseService: ICrudService<CourseDto>
+    public interface ICourseService
     {
-        // Task<CourseDto> CreateCourseAsync(CourseDto dto);
-        // Task<IEnumerable<CourseDto>> GetAllCoursesAsync();
-        // Task<CourseDto?> GetCourseByIdAsync(Guid id);
-        // Task<CourseDto> UpdateCourseAsync(CourseDto dto);
-        // Task<bool> DeleteCourseAsync(Guid id);
+        Task<CourseDto> CreateCourseAsync(CourseDto dto);
+        Task<IEnumerable<CourseDto>> GetAllCoursesAsync();
+        Task<CourseDto?> GetCourseByIdAsync(Guid id);
+        Task<CourseDto> UpdateCourseAsync(CourseDto dto);
+        Task<bool> DeleteCourseAsync(Guid id);
 
     }
 }

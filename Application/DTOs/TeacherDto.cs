@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Application.DTOs.Base;
 using Domain.Enums;
 
-namespace Application.DTOs.Base
+namespace Application.DTOs
 {
     public class TeacherDto: BasePersonDto
     {

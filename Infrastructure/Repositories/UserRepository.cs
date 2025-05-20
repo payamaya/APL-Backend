@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Entities.Base;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +7,10 @@ namespace Infrastructure.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
+        private readonly AppDbContext _context;
         public UserRepository(AppDbContext context) : base(context)
         {
+            _context = context;
         }
 
         public async Task<User?> FindByEmailAsync(string email)

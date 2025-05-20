@@ -20,13 +20,13 @@ namespace APL_Backend.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _UserService.GetAllAsync());
+        public async Task<IActionResult> GetAll() => Ok(await _UserService.GetAllUsersAsync());
 
         [Authorize(Roles = "Admin,Teacher")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var result = await _UserService.GetByIdAsync(id);
+            var result = await _UserService.GetUserByIdAsync(id);
             return result == null ? NotFound() : Ok(result);
         }
 
@@ -34,7 +34,7 @@ namespace APL_Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] UserDto dto)
         {
-            await _UserService.CreateAsync(dto); // Removed assignment to a variable since CreateUserAsync returns void
+            await _UserService.CreateUserAsync(dto); // Removed assignment to a variable since CreateUserAsync returns void
             return Ok("User created successfully."); // Added a success message to indicate the operation was completed
         }
 
@@ -43,7 +43,7 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Update(Guid id, [FromBody] UserDto dto)
         {
             if (id != dto.Id) return BadRequest("ID mismatch");
-            await _UserService.UpdateAsync(dto); // Fix: Removed assignment to a variable since UpdateUserAsync returns void
+            await _UserService.UpdateUserAsync(dto); // Fix: Removed assignment to a variable since UpdateUserAsync returns void
             return Ok("User updated successfully."); // Added a success message to indicate the operation was completed
         }
 
@@ -51,7 +51,7 @@ namespace APL_Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _UserService.DeleteAsync(id);
+            var result = await _UserService.DeleteUserAsync(id);
             return result ? Ok() : NotFound();
         }
 

@@ -9,6 +9,7 @@ using Domain.Entities.Base;
 using Domain.Enums;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.Services
@@ -169,7 +170,10 @@ namespace Application.Services
             }
             catch
             {
-                await transaction.RollbackAsync();
+                if (transaction.GetDbTransaction().Connection != null)
+                {
+                    await transaction.RollbackAsync();
+                }
                 throw;
             }
         }

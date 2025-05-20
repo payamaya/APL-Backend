@@ -61,7 +61,7 @@ namespace APL_Backend.Controllers
             try
             {
                 dto.ModuleId = moduleId; // Ensure association
-                var createdActivity = await _activityService.CreateAsync(dto);
+                var createdActivity = await _activityService.CreateActivityAsync(dto);
                 return CreatedAtAction(
                     nameof(Get),
                     new { moduleId, activityId = createdActivity.Id },
@@ -95,12 +95,12 @@ namespace APL_Backend.Controllers
             }
 
             dto.ModuleId = moduleId; // Ensure course association remains
-            return Ok(await _activityService.UpdateAsync(dto));
+            return Ok(await _activityService.UpdateActivityAsync(dto));
         }
 
         [Authorize(Roles = "Teacher")]
         [HttpDelete("{activityId}")]
         public async Task<IActionResult> Delete(Guid moduleId, Guid activityId) =>
-            Ok(await _activityService.DeleteAsync(activityId));
+            Ok(await _activityService.DeleteActivityAsync(activityId));
     }
 }

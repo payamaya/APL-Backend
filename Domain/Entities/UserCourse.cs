@@ -1,7 +1,4 @@
-﻿
-using Domain.Entities.Base;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class UserCourse
     {
