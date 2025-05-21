@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Domain.Enums;
 using Domain.Interfaces;
+using Domain.Entities;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -74,7 +75,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<IUserCourseRepository, UserCourseRepository>();
-
+builder.Services.AddScoped<IPasswordHasher<User>, Infrastructure.Repositories.Interfaces.PasswordHasher>();
+builder.Services.AddHttpContextAccessor();
 
 
 // In your API project (e.g., Program.cs or Startup.cs)
