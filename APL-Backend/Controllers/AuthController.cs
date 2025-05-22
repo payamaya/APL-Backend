@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Auth;
 using Application.DTOs.Base;
+using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -45,7 +46,7 @@ namespace APL_Backend.Controllers
             var success = await _authService.ConfirmEmailAsync(token);
             return success
                 ? Ok(new { Message = "Email confirmed. You can now log in." })
-                : BadRequest("Invalid or expired token.");
+                : throw new AppException("Email confirmation failed.");
         }
 
         [Authorize]

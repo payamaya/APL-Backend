@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Base;
+using Application.Exceptions;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,13 +42,13 @@ namespace APL_Backend.Controllers
             var utcNow = DateTime.UtcNow;
             if (dto.StartDate < utcNow.AddSeconds(PAST_DATE_TOLERANCE_SECONDS))
             {
-                return BadRequest("Start date cannot be in the past.");
+                throw new AppException("Start date cannot be in the past.");
             }
 
             // Validate that EndDate (if provided) is after StartDate
             if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
             {
-                return BadRequest("End date must be after start date.");
+               throw new AppException("End date must be after start date.");
             }
 
             // If validation passes, create the course
@@ -68,13 +69,13 @@ namespace APL_Backend.Controllers
             // Validate the StartDate
             if (dto.StartDate < currentCET)
             {
-                return BadRequest("Start date cannot be in the past.");
+                throw new AppException("Start date cannot be in the past.");
             }
 
             // Validate that EndDate (if provided) is after StartDate
             if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
             {
-                return BadRequest("End date must be after start date.");
+                throw new AppException("End date must be after start date.");
             }
 
             return Ok(await _courseService.UpdateCourseAsync(dto));

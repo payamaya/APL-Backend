@@ -1,18 +1,17 @@
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Application.Interfaces;
-using Infrastructure.Repositories;
-using Application.Mapping;
-using System.Text.Json.Serialization;
-using Infrastructure.Repositories.Interfaces;
-using Application.Services;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Application.Helpers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Domain.Enums;
+using Application.Interfaces;
+using Application.Middleware;
+using Application.Services;
 using Domain.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
+using Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Text.Json.Serialization;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,8 +74,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<IUserCourseRepository, UserCourseRepository>();
 
-
-
 // In your API project (e.g., Program.cs or Startup.cs)
 builder.Services.AddScoped<IFileService>(provider =>
 {
@@ -115,7 +112,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
-
 
 
 // Register AutoMapper and scan the current domain for profiles
@@ -164,12 +160,16 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+app.UseMiddleware<ErrorHandlingMiddleware>(); //  Required
+app.UseRouting(); //  Required for CORS and Authentication
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 app.UseCors("ReactFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
