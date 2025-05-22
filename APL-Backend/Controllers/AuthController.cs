@@ -3,7 +3,6 @@ using Application.DTOs.Auth;
 using Application.DTOs.Base;
 using Application.Exceptions;
 using Application.Interfaces;
-using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -27,9 +26,23 @@ namespace APL_Backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto dto)
         {
-            var result = await _authService.LoginAsync(dto);
-            return Ok(result);
+            try
+            {
+                var result = await _authService.LoginAsync(dto);
+
+                if (result == null)
+                {
+                    return Unauthorized(new { message = "Incorrect email or password." });
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
 
         [AllowAnonymous]
         [HttpPost("register")]
@@ -38,6 +51,22 @@ namespace APL_Backend.Controllers
             var userId = await _authService.RegisterWithEmailConfirmationAsync(dto);
             return Ok(new { Message = "Registration successful; please check your email to confirm.", UserId = userId });
         }
+        [Authorize]
+        [HttpPost("set-password")]
+        public async Task<IActionResult> SetPassword([FromBody] SetPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _authService.SetPasswordAsync(dto.Password);
+
+            if (!result.Success)
+                return BadRequest(new { result.Message });
+
+            return Ok(new { Success = true, result.Message });
+
+        }
+
 
         [AllowAnonymous]
         [HttpGet("confirm-email")]
