@@ -9,27 +9,38 @@ using Domain.Entities.Base;
 using Domain.Enums;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using BCrypt.Net;
+
 
 namespace Application.Services
 {
     public class AuthService : IAuthService
-{
-    private readonly AppDbContext _context;
-    private readonly IRepositoryWrapper _repos;
-    private readonly IConfiguration _config;
-    private readonly IEmailVerificationRepository _iEmail;
-    private readonly IEmailService _emailService;
-    private readonly IOtpCodeRepository _otpCodeRepository;
-        public AuthService(AppDbContext context, IRepositoryWrapper repos, IConfiguration config, IEmailVerificationRepository emailVerificationRepository, IEmailService emailService, IOtpCodeRepository otpCodeRepository)
     {
-        _context = context;
-        _repos = repos;
-        _config = config;
-        _iEmail = emailVerificationRepository;
-        _emailService = emailService;
-        _otpCodeRepository = otpCodeRepository;
+        private readonly AppDbContext _context;
+        private readonly IRepositoryWrapper _repos;
+        private readonly IConfiguration _config;
+        private readonly IEmailVerificationRepository _iEmail;
+        private readonly IEmailService _emailService;
+        private readonly IOtpCodeRepository _otpCodeRepository;
+        private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthService(AppDbContext context, IRepositoryWrapper repos, IConfiguration config, IEmailVerificationRepository emailVerificationRepository, IEmailService emailService, IOtpCodeRepository otpCodeRepository, IPasswordHasher<User> passwordHasher, IHttpContextAccessor httpContextAccessor)
+        {
+            _context = context;
+            _repos = repos;
+            _config = config;
+            _iEmail = emailVerificationRepository;
+            _emailService = emailService;
+            _otpCodeRepository = otpCodeRepository;
+            _passwordHasher = passwordHasher;
+            _httpContextAccessor = httpContextAccessor;
+
         }
 
         public async Task<bool> ConfirmEmailAsync(string token)
@@ -52,30 +63,57 @@ namespace Application.Services
 
             user.EmailConfirmed = true;
 
+            var otpCode = OtpHasher.GenerateOtp();
+            var otp = new OtpCode
+            {
+                Id = Guid.NewGuid(),
+                Email = user.Email,
+                Code = OtpHasher.HashOtp(otpCode),
+                ExpiresAt = DateTime.UtcNow.AddMinutes(10),
+                IsUsed = false
+            };
+            await _otpCodeRepository.AddAsync(otp);
+            var subject = "Your OTP Code";
+            var body = $"<p>Use this code to verify your account: <strong>{otpCode}</strong></p> which will be expired at {otp.ExpiresAt}";
+            await _emailService.SendEmailAsync(user.Email, subject, body);
             // 3. Mark token as used
             verification.IsUsed = true;
 
             await _repos.Users.SaveChangesAsync(); // assumes shared context with verification repository
-
+            await _otpCodeRepository.SaveChangesAsync();
             return true;
         }
 
         public async Task<AuthResponseDto> LoginAsync(LoginRequestDto dto)
-    {
-        var user = await _repos.Users.FindByEmailAsync(dto.Email);
-
-            if (user == null || !PasswordHasher.Verify(dto.Password, user.Password))
         {
-            throw new UnauthorizedAccessException("Invalid credentials.");
-        }
-            // Optional: Enforce email confirmation
+            var user = await _repos.Users.FindByEmailAsync(dto.Email);
+
+            if (user == null)
+            {
+                throw new UnauthorizedAccessException("Invalid credentials.");
+            }
+
+            // Verify password with proper error handling
+            try
+            {
+                if (!_passwordHasher.VerifyPassword(user, user.Password, dto.Password))
+                {
+                    throw new UnauthorizedAccessException("Invalid credentials.");
+                }
+            }
+            catch (SaltParseException ex)
+            {
+                // Log this specific error for debugging
+                Console.WriteLine($"Password verification failed: {ex.Message}");
+                throw new Exception("Authentication system error. Please contact support.");
+            }
+
             if (!user.EmailConfirmed)
             {
                 throw new Exception("Please confirm your email before logging in.");
             }
 
-            // Check if OTP verification is required
-            if (!user.IsOtpVerified) // <- Add this flag on the user entity
+            if (!user.IsOtpVerified)
             {
                 throw new Exception("OTP not verified. Please verify OTP to complete login.");
             }
@@ -83,12 +121,12 @@ namespace Application.Services
             var token = JwtHelper.GenerateToken(user, _config);
 
             return new AuthResponseDto
-        {
-            Token = token,
-            Role = user.Role.ToString(),
-            ExpiresAt = DateTime.UtcNow.AddMinutes(int.Parse(_config["JWT:ExpiresInMinutes"]))
-        };
-    }
+            {
+                Token = token,
+                Role = user.Role.ToString(),
+                ExpiresAt = DateTime.UtcNow.AddMinutes(int.Parse(_config["JWT:ExpiresInMinutes"]))
+            };
+        }
         public async Task<Guid> RegisterWithEmailConfirmationAsync(UserDto dto)
         {
             // 1. Check for existing email
@@ -108,7 +146,7 @@ namespace Application.Services
                     Telephone = dto.Telephone,
                     Address = dto.Address,
                     Email = dto.Email,
-                    Password = PasswordHasher.Hash(dto.Password),
+                    Password = _passwordHasher.HashPassword(new User { Email = dto.Email }, dto.Password),
                     Role = dto.Role,
                     EmailConfirmed = false,
                     IsOtpVerified = false, // <- Add this flag on the user entity
@@ -119,8 +157,9 @@ namespace Application.Services
                 switch (dto.Role)
                 {
                     case Role.Student:
-                        await _repos.Students.AddAsync(new Student { 
-                            Id = user.Id, 
+                        await _repos.Students.AddAsync(new Student
+                        {
+                            Id = user.Id,
                             Email = user.Email,
                             FirstName = user.FirstName,
                             LastName = user.LastName,
@@ -130,8 +169,9 @@ namespace Application.Services
                         });
                         break;
                     case Role.Teacher:
-                        await _repos.Teachers.AddAsync(new Teacher { 
-                            Id = user.Id, 
+                        await _repos.Teachers.AddAsync(new Teacher
+                        {
+                            Id = user.Id,
                             Email = user.Email,
                             FirstName = user.FirstName,
                             LastName = user.LastName,
@@ -188,7 +228,7 @@ namespace Application.Services
                 throw new InvalidOperationException("Email is not confirmed.");
 
             // 2. Generate 6-digit OTP
-            var code = new Random().Next(100000, 999999).ToString();
+            var code = OtpHasher.GenerateOtp();
             string hashedOtp = OtpHasher.HashOtp(code);
 
             // 3. Store in OtpCodes table
@@ -218,6 +258,47 @@ namespace Application.Services
                 $"Your one-time code is <b>{code}</b>. It expires in 10 minutes."
             );
         }
+        public async Task<Guid> SetYourPassword(UserDto dto)
+        {
+            var user = await _repos.Users.FindByEmailAsync(dto.Email);
+            if (user == null)
+                throw new Exception("User not found.");
+
+            if (!user.EmailConfirmed)
+                throw new Exception("Email must be confirmed before setting password.");
+
+            user.Password = _passwordHasher.HashPassword(user, dto.Password);
+            await _repos.Users.SaveChangesAsync();
+
+            return user.Id;
+        }
+
+        public async Task<(bool Success, string Message)> SetPasswordAsync(string password)
+        {
+            // Get email from JWT claims
+            var email = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(email))
+                return (false, "User email not found in token");
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+                return (false, "User not found");
+
+            if (!user.EmailConfirmed)
+                return (false, "Please confirm your email first");
+
+            if (!user.IsOtpVerified)
+                return (false, "Please verify OTP first");
+
+            user.Password = _passwordHasher.HashPassword(user, password);
+            _context.Users.Update(user);
+
+            var saved = await _context.SaveChangesAsync();
+
+            return (saved > 0,
+                saved > 0 ? "Password updated successfully" : "Failed to update password");
+        }
+
 
         public async Task<bool> VerifyOtpAsync(string email, string code)
         {
