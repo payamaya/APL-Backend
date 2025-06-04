@@ -26,81 +26,71 @@ namespace APL_Backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequestDto dto)
         {
-            try
-            {
-                var result = await _authService.LoginAsync(dto);
-
-                if (result == null)
-                {
-                    return Unauthorized(new { message = "Incorrect email or password." });
-                }
-
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _authService.LoginAsync(dto); // throws exceptions if invalid
+            return Ok(result);
         }
-
 
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDto dto)
         {
-            var userId = await _authService.RegisterWithEmailConfirmationAsync(dto);
-            return Ok(new { Message = "Registration successful; please check your email to confirm.", UserId = userId });
+            var userId = await _authService.RegisterWithEmailConfirmationAsync(dto); // throws on failure
+            return Ok(new
+            {
+                Message = "Registration successful; please check your email to confirm.",
+                UserId = userId
+            });
         }
+
         [Authorize]
         [HttpPost("set-password")]
         public async Task<IActionResult> SetPassword([FromBody] SetPasswordDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                throw new AppException("Invalid password input.");
 
             var result = await _authService.SetPasswordAsync(dto.Password);
-
             if (!result.Success)
-                return BadRequest(new { result.Message });
+                throw new AppException(result.Message);
 
-            return Ok(new { Success = true, result.Message });
-
+            return Ok(new { success = true, result.Message });
         }
-
 
         [AllowAnonymous]
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
         {
             var success = await _authService.ConfirmEmailAsync(token);
-            return success
-                ? Ok(new { Message = "Email confirmed. You can now log in." })
-                : throw new AppException("Email confirmation failed.");
+            if (!success)
+                throw new AppException("Email confirmation failed.");
+
+            return Ok(new { Message = "Email confirmed. You can now log in." });
         }
 
         [Authorize]
         [HttpPost("send-otp")]
         public async Task<IActionResult> SendOtp()
         {
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            await _authService.SendOtpAsync(email!);
-            return Ok("OTP sent to your email.");
+            var email = User.FindFirstValue(ClaimTypes.Email)
+                ?? throw new UnauthorizedException("Email not found in claims.");
+
+            await _authService.SendOtpAsync(email);
+            return Ok(new { Message = "OTP sent to your email." });
         }
 
         [Authorize]
         [HttpPost("verify-otp")]
-        public async Task<IActionResult> VerifyOtp([FromBody]OtpVerifyDto dto)
+        public async Task<IActionResult> VerifyOtp([FromBody] OtpVerifyDto dto)
         {
-            var email = User.FindFirstValue(ClaimTypes.Email);
-            var ok = await _authService.VerifyOtpAsync(email!, dto.Code);
+            var email = User.FindFirstValue(ClaimTypes.Email)
+                ?? throw new UnauthorizedException("Email not found in claims.");
+
+            await _authService.VerifyOtpAsync(email, dto.Code);
             return Ok(new
             {
                 success = true,
-                message = "OTP verified successfully",
+                message = "OTP verified successfully"
             });
-
         }
-
     }
-
 }

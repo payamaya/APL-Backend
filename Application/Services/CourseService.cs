@@ -4,6 +4,7 @@ using Application.DTOs;
 using Infrastructure.Repositories.Interfaces;
 using Application.Interfaces;
 using Application.DTOs.Base;
+using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -49,7 +50,7 @@ namespace Application.Services
         public async Task<CourseDto> UpdateCourseAsync(CourseDto dto)
         {
             var course = await _repository.GetByIdAsync(dto.Id);
-            if (course == null) throw new Exception("Course not found");
+            if (course == null) throw new NotFoundException("Course not found");
 
             _mapper.Map(dto, course);
             await _repository.UpdateAsync(course);

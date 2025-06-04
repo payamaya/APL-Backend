@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Base;
+using Application.Exceptions;
 using Application.Interfaces;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -42,20 +43,20 @@ namespace APL_Backend.Controllers
 
             if (dto.ActivityType == ActivityType.Assignment && dto.EndDate == null)   
             {
-                throw new Exception("Assignments must have a due date.");
+                throw new AppException("Assignments must have a due date.");
             }
 
             // Validate the StartDate
             var utcNow = DateTime.UtcNow;
             if (dto.StartDate < utcNow.AddSeconds(PAST_DATE_TOLERANCE_SECONDS))
             {
-                return BadRequest("Start date cannot be in the past.");
+                throw new AppException("Start date cannot be in the past.");
             }
 
             // Validate that EndDate (if provided) is after StartDate
             if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
             {
-                return BadRequest("End date must be after start date.");
+                throw new AppException("End date must be after start date.");
             }
 
             try
@@ -78,20 +79,20 @@ namespace APL_Backend.Controllers
         [HttpPut("{activityId}")]
         public async Task<IActionResult> Update(Guid moduleId, Guid activityId, [FromBody] ActivityDto dto)
         {
-            if (activityId != dto.Id) return BadRequest("ID mismatch");
+            if (activityId != dto.Id) throw new AppException("ID mismatch");
 
             if (!Enum.IsDefined(typeof(ActivityType), dto.ActivityType))
-                return BadRequest("Invalid activity type.");
+                throw new AppException("Invalid activity type.");
             // Validate the StartDate
             if (dto.StartDate < DateTime.UtcNow)
             {
-                return BadRequest("Start date cannot be in the past.");
+                throw new AppException("Start date cannot be in the past.");
             }
 
             // Validate that EndDate (if provided) is after StartDate
             if (dto.EndDate.HasValue && dto.EndDate.Value <= dto.StartDate)
             {
-                return BadRequest("End date must be after start date.");
+                throw new AppException("End date must be after start date.");
             }
 
             dto.ModuleId = moduleId; // Ensure course association remains

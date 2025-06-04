@@ -29,7 +29,7 @@ public class UserService : IUserService
         // Update the method call to specify the correct interface or namespace to resolve ambiguity
         var existing = await _repos.Users.FindByEmailAsync(dto.Email);
         if (existing != null)
-            throw new ConflictException("Email already in use.");
+            throw new AppException("Email already in use.");
 
             // 2. Create user with EmailConfirmed = false
             var user = new User
@@ -93,7 +93,7 @@ public class UserService : IUserService
     {
         var user = await _repos.Users.GetByIdAsync(id);
         if (user == null)
-            throw new Exception("User not found.");
+            throw new NotFoundException("User not found.");
 
         return _mapper.Map<UserDto>(user);
     }
@@ -102,7 +102,7 @@ public class UserService : IUserService
     {
         var user = await _repos.Users.GetByIdAsync(dto.Id);
         if (user == null)
-            throw new Exception("User not found.");
+            throw new NotFoundException("User not found.");
 
         // Update fields (but don't update sensitive fields unless explicitly required)
         user.Email = dto.Email;
@@ -132,7 +132,7 @@ public class UserService : IUserService
     {
         var exists = await _context.UserCourses.FindAsync(dto.UserId, dto.CourseId);
         if (exists != null)
-            throw new InvalidOperationException("User already enrolled in this course.");
+            throw new AppException("User already enrolled in this course.");
 
         var uc = new UserCourse
         {
@@ -148,7 +148,7 @@ public class UserService : IUserService
     {
         var uc = await _context.UserCourses.FindAsync(dto.UserId, dto.CourseId);
         if (uc == null)
-            throw new InvalidOperationException("User is not enrolled in this course.");
+            throw new AppException("User is not enrolled in this course.");
 
         _context.UserCourses.Remove(uc);
         await _context.SaveChangesAsync();

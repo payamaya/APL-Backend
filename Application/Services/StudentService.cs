@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
 using AutoMapper;
@@ -88,7 +89,7 @@ namespace Application.Services
         public async Task<StudentDto> UpdateStudentAsync(StudentDto dto)
         {
             var student = await _repos.Students.GetByIdAsync(dto.Id);
-            if (student == null) throw new Exception("Student not found");
+            if (student == null) throw new NotFoundException("Student not found");
 
             _mapper.Map(dto, student);
             await _repos.Students.UpdateAsync(student);

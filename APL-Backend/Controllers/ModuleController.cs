@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,14 +44,14 @@ namespace APL_Backend.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                throw new AppException(ex.Message);
             }
         }
 
         [HttpPut("{moduleId}")]
         public async Task<IActionResult> Update(Guid courseId, Guid moduleId, [FromBody] ModuleDto dto)
         {
-            if (moduleId != dto.Id) return BadRequest("ID mismatch");
+            if (moduleId != dto.Id) throw new AppException("ID mismatch");
             dto.CourseId = courseId; // Ensure course association remains
             return Ok(await _moduleService.UpdateModuleAsync(dto));
         }

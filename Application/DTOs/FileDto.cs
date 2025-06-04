@@ -5,7 +5,6 @@ namespace Application.DTOs
 {
     public class FileDto
     {
-        [Required]
         public IFormFile? File { get; set; }
         public Guid Id { get; set; }
         public string? FileName { get; set; }

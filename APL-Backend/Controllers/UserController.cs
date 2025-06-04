@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Base;
+using Application.Exceptions;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _UserService.GetUserByIdAsync(id);
-            return result == null ? NotFound() : Ok(result);
+            return result == null ? throw new NotFoundException("No such user found in database!") : Ok(result);
         }
 
         [Authorize(Roles = "Admin")]
@@ -42,7 +43,7 @@ namespace APL_Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UserDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID mismatch");
+            if (id != dto.Id) throw new AppException("ID mismatch");
             await _UserService.UpdateUserAsync(dto); // Fix: Removed assignment to a variable since UpdateUserAsync returns void
             return Ok("User updated successfully."); // Added a success message to indicate the operation was completed
         }

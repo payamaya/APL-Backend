@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.DTOs.Base;
+using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -41,7 +42,7 @@ namespace Application.Services
             var courseExists = await _courseRepository.GetByIdAsync(dto.CourseId);
             if (courseExists == null)
             {
-                throw new InvalidOperationException($"Course with ID {dto.CourseId} does not exist");
+                throw new NotFoundException($"Course with ID {dto.CourseId} does not exist");
             }
 
             var module = _mapper.Map<Module>(dto);
@@ -52,7 +53,7 @@ namespace Application.Services
         public async Task<ModuleDto> UpdateModuleAsync(ModuleDto dto)
         {
             var module = await _repository.GetByIdAsync(dto.CourseId, dto.Id);
-            if (module == null) throw new Exception("Module not found");
+            if (module == null) throw new NotFoundException("Module not found");
 
             // Verify the course exists if CourseId is being updated
             if (module.CourseId != dto.CourseId)
@@ -60,7 +61,7 @@ namespace Application.Services
                 var courseExists = await _courseRepository.GetByIdAsync(dto.CourseId);
                 if (courseExists == null)
                 {
-                    throw new InvalidOperationException($"Course with ID {dto.CourseId} does not exist");
+                    throw new NotFoundException($"Course with ID {dto.CourseId} does not exist");
                 }
             }
 
