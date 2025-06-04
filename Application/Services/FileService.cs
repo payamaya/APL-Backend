@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using Application.DTOs;
+using Application.Exceptions;
 using Application.Helpers;
 using Application.Interfaces;
 
@@ -28,7 +29,7 @@ namespace Application.Services
             var fileRecord = await _fileRepository.GetByIdAsync(id);
             if (fileRecord == null || !System.IO.File.Exists(fileRecord.FilePath))
             {
-                throw new FileNotFoundException("File not found.");
+                throw new NotFoundException("File not found.");
             }
             return fileRecord;
         }
@@ -39,7 +40,7 @@ namespace Application.Services
             var extension = Path.GetExtension(dto.File.FileName).ToLower();
             if (!allowedExtensions.Contains(extension) || dto.File.Length > 10 * 1024 * 1024) // 10MB max  
             {
-                throw new InvalidOperationException("Invalid file type or file size exceeds the limit.");
+                throw new AppException("Invalid file type or file size exceeds the limit.");
             }
 
             // Generate a unique ID for the file  
@@ -81,7 +82,7 @@ namespace Application.Services
             var fileRecord = await _fileRepository.GetByIdAsync(id);
             if (fileRecord == null || !System.IO.File.Exists(fileRecord.FilePath))
             {
-                throw new FileNotFoundException("File not found.");
+                throw new NotFoundException("File not found.");
             }
 
             // Step 1: Read the encrypted file
@@ -94,7 +95,7 @@ namespace Application.Services
             }
             catch (CryptographicException) 
             {
-                throw new InvalidOperationException("Failed to decrypt the file. It may be corrupted or the encryption key is invalid.");
+                throw new AppException("Failed to decrypt the file. It may be corrupted or the encryption key is invalid.");
             }
 
             // Step 3: Return decrypted content

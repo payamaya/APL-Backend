@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Base;
+using Application.Exceptions;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace APL_Backend.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _TeacherService.GetTeacherByIdAsync(id);
-            return result == null ? NotFound() : Ok(result);
+            return result == null ? throw new NotFoundException("No such teacher found on database!") : Ok(result);
         }
 
         [HttpPost]
@@ -41,7 +42,7 @@ namespace APL_Backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] TeacherDto dto)
         {
-            if (id != dto.Id) return BadRequest("ID mismatch");
+            if (id != dto.Id) throw new AppException("ID mismatch");
 
             // Get the current time in Central European Time (CET)
             TimeZoneInfo cetZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");

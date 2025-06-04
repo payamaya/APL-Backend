@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.DTOs.Base;
+using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -35,7 +36,7 @@ namespace Application.Services
         public async Task<ActivityDto> CreateActivityAsync(ActivityDto dto)
         {
             if (!await _repository.ModuleExists(dto.ModuleId))
-                throw new InvalidOperationException($"Module {dto.ModuleId} doesn't exist.");
+                throw new NotFoundException($"Module {dto.ModuleId} doesn't exist.");
 
             var entity = _mapper.Map<Activity>(dto);
             await _repository.AddAsync(entity);
@@ -45,10 +46,10 @@ namespace Application.Services
         public async Task<ActivityDto> UpdateActivityAsync(ActivityDto dto)
         {
             var activity = await _repository.GetByIdAsync(dto.Id);
-            if (activity == null) throw new Exception("Activity not found");
+            if (activity == null) throw new AppException("Activity not found");
 
             if (activity.ModuleId != dto.ModuleId && !await _repository.ModuleExists(dto.ModuleId))
-                throw new InvalidOperationException("Module not found.");
+                throw new NotFoundException("Module not found.");
 
             _mapper.Map(dto, activity);
             await _repository.UpdateAsync(activity);

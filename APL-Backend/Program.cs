@@ -2,18 +2,20 @@ using Application.Helpers;
 using Application.Interfaces;
 using Application.Middleware;
 using Application.Services;
+using Application.Validators;
+using Domain.Entities;
 using Domain.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
-using Domain.Enums;
-using Domain.Interfaces;
-using Domain.Entities;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -103,6 +105,35 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+            var result = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                success = false,
+                error = "Invalid token.",
+                statusCode = 401
+            });
+            return context.Response.WriteAsync(result);
+        },
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+            var result = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                success = false,
+                error = "Unauthorized: Token is missing or expired.",
+                statusCode = 401
+            });
+            return context.Response.WriteAsync(result);
+        }
+    };
+
     var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]);
 
     options.TokenValidationParameters = new TokenValidationParameters
@@ -122,15 +153,37 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add other services
-//builder.Services.AddControllers();
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<FileDtoValidator>();
+
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
     {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+        var errors = context.ModelState
+            .Where(e => e.Value.Errors.Count > 0)
+            .Select(e => new
+            {
+                Field = e.Key,
+                Errors = e.Value.Errors.Select(er => er.ErrorMessage)
+            });
+
+        return new BadRequestObjectResult(new
+        {
+            success = false,
+            statusCode = 400,
+            message = "Validation failed.",
+            errors
+        });
+    };
+});
+
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -163,6 +216,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>(); //  Required
 app.UseRouting(); //  Required for CORS and Authentication
@@ -178,5 +233,6 @@ app.UseCors("ReactFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ErrorHandlingMiddleware>(); // <- AFTER auth
 app.MapControllers();
 app.Run();
